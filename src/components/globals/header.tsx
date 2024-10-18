@@ -7,7 +7,7 @@ import UserDropdown from "./user-dropdown";
 
 const Header = () => {
   return (
-    <div className="md:flex md:items-center md:justify-between bg-[#f5f5f5] dark:bg-neutral-800 px-10 border-b h-16 w-full hidden">
+    <div className="md:flex md:items-center md:justify-between bg-[#f7f7f7] dark:bg-neutral-950 px-10 border-b h-16 w-full hidden">
       <div className="relative flex-1 md:grow-0">
         <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input

@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 const UserDropdown = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <div className="flex ml-5 items-center gap-1">
           <Avatar>
             <AvatarImage src="https://api.dicebear.com/9.x/adventurer/svg?seed=Leo" />

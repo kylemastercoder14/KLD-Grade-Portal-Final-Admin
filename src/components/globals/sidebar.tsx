@@ -25,6 +25,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export function Sidebar() {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const getIconClasses = (path: string) =>
     `h-6 w-6 flex-shrink-0 ${
@@ -32,6 +33,7 @@ export function Sidebar() {
         ? "text-black dark:text-white"
         : "text-neutral-500"
     }`;
+
   const links = [
     {
       title: "General",
@@ -120,10 +122,10 @@ export function Sidebar() {
       ],
     },
   ];
-  const [open, setOpen] = useState(false);
+
   return (
     <SidebarComponent open={open} setOpen={setOpen}>
-      <SidebarBody className="justify-between gap-10 bg-[#dfdfdf] dark:bg-neutral-950 shadow-md border">
+      <SidebarBody className="justify-between gap-10 bg-[#f7f7f7] dark:bg-neutral-950 shadow-md border">
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           {open ? <Logo /> : <LogoIcon />}
 

@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 const NotificationDropdown = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button className="relative" variant="ghost" size="icon">
           <IconBell className="h-6 w-6" />
           <small className="bg-red-700 rounded-full absolute top-0 right-0 h-3 flex items-center justify-center p-1 text-white w-3">3</small>
