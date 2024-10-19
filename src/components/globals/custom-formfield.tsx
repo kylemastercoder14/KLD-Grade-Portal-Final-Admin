@@ -94,40 +94,46 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.INPUT:
       return (
         <>
-          <FormControl>
-            <div className="shad-input-outer">
-              <Input
-                type={type === "password" && !showPassword ? "password" : type}
-                placeholder={placeholder}
-                disabled={disabled}
-                {...field}
-                className="shad-input"
-                autoFocus={autoFocus}
-                onChange={(event) => {
-                  let value = event.target.value;
-                  if (type === "number") {
-                    // Handle empty value to avoid NaN
-                    value = value === "" ? "" : String(parseFloat(value));
+          <HoverEffectWrapper disabled={disabled}>
+            <FormControl>
+              <div className="shad-input-outer">
+                <Input
+                  type={
+                    type === "password" && !showPassword ? "password" : type
                   }
-                  field.onChange(value);
-                }}
-              />
-              {type === "password" && (
-                <button
-                  type="button"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  onClick={toggleShowPassword}
-                  className="floating-right-btn"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4 opacity-50" />
-                  )}
-                </button>
-              )}
-            </div>
-          </FormControl>
+                  placeholder={placeholder}
+                  disabled={disabled}
+                  {...field}
+                  className="shad-input"
+                  autoFocus={autoFocus}
+                  onChange={(event) => {
+                    let value = event.target.value;
+                    if (type === "number") {
+                      // Handle empty value to avoid NaN
+                      value = value === "" ? "" : String(parseFloat(value));
+                    }
+                    field.onChange(value);
+                  }}
+                />
+                {type === "password" && (
+                  <button
+                    type="button"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    onClick={toggleShowPassword}
+                    className="floating-right-btn"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4 opacity-50" />
+                    )}
+                  </button>
+                )}
+              </div>
+            </FormControl>
+          </HoverEffectWrapper>
           {description && <FormDescription>{description}</FormDescription>}
         </>
       );
@@ -222,7 +228,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             </SelectTrigger>
 
             <SelectContent>
-              {dynamicOptions?.length > 0
+              {dynamicOptions && dynamicOptions.length > 0
                 ? dynamicOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
