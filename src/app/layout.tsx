@@ -35,7 +35,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>{children}</TanstackProvider>
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>
     </html>

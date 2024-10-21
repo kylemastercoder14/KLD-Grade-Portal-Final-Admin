@@ -377,7 +377,7 @@
   }
 
   .shad-gray-btn {
-    @apply border border-dark-500 cursor-pointer   text-white !important;
+    @apply border border-dark-500 cursor-pointer text-white !important;
   }
 
   .shad-input-label {
@@ -385,11 +385,11 @@
   }
 
   .shad-input {
-    @apply flex w-full pl-2 justify-start border-0 font-normal rounded-tl-none rounded-bl-none  placeholder:text-dark-600 bg-gray-100 dark:bg-zinc-800 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed !important;
+    @apply flex w-full pl-2 justify-start border-0 font-normal placeholder:text-dark-600 bg-gray-100 dark:bg-zinc-800 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed !important;
   }
 
   .shad-input-outer {
-    @apply relative w-full ml-2 rounded-tl-none rounded-bl-none bg-none !important;
+    @apply relative w-full bg-none !important;
   }
 
   .shad-input-icon {

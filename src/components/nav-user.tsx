@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  FileUp,
-  LogOut,
-} from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown, FileUp, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -98,10 +91,6 @@ export function NavUser({
                 <DropdownMenuItem>
                   <BadgeCheck />
                   Account
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCard />
-                  Billing
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Bell />

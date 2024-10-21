@@ -97,7 +97,7 @@ const ImageUpload = ({
           </div>
         ) : (
           <>
-            <Inbox className="w-10 h-10 text-orange-500" />
+            <Inbox className="w-10 h-10 text-green-500" />
             <p className="mt-2 text-sm text-slate-400">Drop your image here.</p>
           </>
         )}

@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Command,
   LifeBuoy,
   Send,
 } from "lucide-react"; // Lucide icons
@@ -27,12 +26,13 @@ import {
   IconNotebook,
   IconSchool,
   IconSpeakerphone,
-} from "@tabler/icons-react"; // Tabler icons
+} from "@tabler/icons-react";
+import Image from "next/image";
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Victoria Balbio",
+    email: "Administrator",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -109,12 +109,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Command className="size-4" />
-                </div>
+                <Image src="/images/kld-logo.png" alt="Logo" width={40} height={40} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-semibold">KLD Grade Portal</span>
+                  <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
             </SidebarMenuButton>

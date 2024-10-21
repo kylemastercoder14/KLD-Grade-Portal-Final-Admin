@@ -14,53 +14,64 @@ const TableHeader = ({ label, href }: { label: string; href?: string }) => {
     day: "",
     greeting: "",
   });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Function to update date, day, and greeting
-    const updateDateInfo = () => {
-      const now = new Date();
+    setIsMounted(true);
+  }, []);
 
-      // Format the date
-      const dateOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+  useEffect(() => {
+    if (isMounted) {
+      // Function to update date, day, and greeting
+      const updateDateInfo = () => {
+        const now = new Date();
+
+        // Format the date
+        const dateOptions: Intl.DateTimeFormatOptions = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+
+        const formattedDate = now.toLocaleDateString(undefined, dateOptions);
+
+        // Get the current day
+        const dayOptions: Intl.DateTimeFormatOptions = { weekday: "long" };
+        const formattedDay = now.toLocaleDateString(undefined, dayOptions);
+
+        // Determine the greeting based on the current time
+        const hour = now.getHours();
+        let greeting = "";
+
+        if (hour < 12) {
+          greeting = "Good Morning";
+        } else if (hour < 18) {
+          greeting = "Good Afternoon";
+        } else {
+          greeting = "Good Evening";
+        }
+
+        // Set the state with updated values
+        setDateInfo({
+          date: formattedDate,
+          day: formattedDay,
+          greeting: greeting,
+        });
       };
 
-      const formattedDate = now.toLocaleDateString(undefined, dateOptions);
+      updateDateInfo();
 
-      // Get the current day
-      const dayOptions: Intl.DateTimeFormatOptions = { weekday: "long" };
-      const formattedDay = now.toLocaleDateString(undefined, dayOptions);
+      // Optional: Update every minute to keep it dynamic
+      const intervalId = setInterval(updateDateInfo, 60000);
 
-      // Determine the greeting based on the current time
-      const hour = now.getHours();
-      let greeting = "";
+      // Clean up the interval on component unmount
+      return () => clearInterval(intervalId);
+    }
+  }, [isMounted]);
 
-      if (hour < 12) {
-        greeting = "Good Morning";
-      } else if (hour < 18) {
-        greeting = "Good Afternoon";
-      } else {
-        greeting = "Good Evening";
-      }
-
-      // Set the state with updated values
-      setDateInfo({
-        date: formattedDate,
-        day: formattedDay,
-        greeting: greeting,
-      });
-    };
-
-    updateDateInfo();
-
-    // Optional: Update every minute to keep it dynamic
-    const intervalId = setInterval(updateDateInfo, 60000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
+  if (!isMounted) {
+    return null; // Avoid rendering until the component is mounted
+  }
 
   return (
     <div className="flex items-center mb-5 justify-between">

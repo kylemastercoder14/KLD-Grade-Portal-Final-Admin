@@ -48,6 +48,12 @@ export const createYearLevel = async (
       },
     });
 
+    await db.logs.create({
+      data: {
+        action: "You added a new year level"
+      }
+    })
+
     return { success: "Year Level created successfully", yearLevel };
   } catch (error: any) {
     return {
@@ -86,6 +92,12 @@ export const updateYearLevel = async (
       },
     });
 
+    await db.logs.create({
+      data: {
+        action: `You updated a year level ${yearLevel.id}`
+      }
+    })
+
     return { success: "Year Level updated successfully", yearLevel };
   } catch (error: any) {
     return {
@@ -108,6 +120,12 @@ export const deleteYearLevel = async (yearLevelId: string) => {
         id: yearLevelId,
       },
     });
+
+    await db.logs.create({
+      data: {
+        action: `You deleted a year level ${yearLevel.id}`
+      }
+    })
 
     return { success: "Year Level deleted successfully", yearLevel };
   } catch (error: any) {
