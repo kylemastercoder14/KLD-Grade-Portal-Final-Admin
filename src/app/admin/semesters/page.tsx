@@ -29,7 +29,7 @@ const Semester = async () => {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <div className="grid flex-1 items-start gap-4 md:gap-8">
+    <div>
       <TableHeader label="Add Semester" />
       <Card>
         <CardHeader>

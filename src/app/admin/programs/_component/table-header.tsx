@@ -63,7 +63,7 @@ const TableHeader = ({ label, href }: { label: string; href?: string }) => {
   }, []);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center mb-5 justify-between">
       <div>
         <p className="text-sm text-muted-foreground">
           {dateInfo.day}, {dateInfo.date}
