@@ -14,18 +14,18 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { SemesterColumn } from "./column";
 import { useDeleteSemester } from "@/data/semester";
-import SemesterForm from "@/components/forms/semester-form";
+import { StudentColumn } from "./column";
+import { useRouter } from "next/navigation";
 
 interface CellActionProps {
-  data: SemesterColumn;
+  data: StudentColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<SemesterColumn | null>(null);
+
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
@@ -41,10 +41,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
-  const onUpdate = () => {
-    setInitialData(data);
-    setFormOpen(true);
-  };
 
   return (
     <>
@@ -54,12 +50,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={isDeleting}
         onConfirm={onDelete}
       />
-      {formOpen && (
-        <SemesterForm
-          initialData={initialData}
-          onClose={() => setFormOpen(false)}
-        />
-      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -69,7 +59,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onUpdate}>
+          <DropdownMenuItem onClick={() => router.push(`/admin/students/${data.id}`)}>
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>

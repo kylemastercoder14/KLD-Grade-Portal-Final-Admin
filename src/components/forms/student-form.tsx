@@ -45,6 +45,12 @@ const StudentForm = ({
           middleName: initialData?.middleName ?? "",
           extensionName: initialData?.extensionName ?? "",
           profileImage: initialData?.profileImage ?? "",
+          maritalStatus: initialData?.civilStatus ?? "",
+          municipality: initialData?.city ?? "",
+          barangay: initialData?.barangay ?? "",
+          yearLevel: initialData?.yearLevelId ?? "",
+          program: initialData?.programId ?? "",
+          section: initialData?.sectionId ?? ""
         }
       : {
           studentNumber: "",
@@ -64,7 +70,7 @@ const StudentForm = ({
           houseNumber: "",
           zipCode: "",
           email: "",
-          password: "",
+          password: "12345678",
           profileImage: "",
           elementarySchool: "",
           highSchool: "",
@@ -164,15 +170,6 @@ const StudentForm = ({
             disabled={isLoading}
           />
           <CustomFormField
-            label="Password"
-            name="password"
-            placeholder="--------"
-            isRequired
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            disabled={isLoading}
-          />
-          <CustomFormField
             label="Phone Number"
             name="phoneNumber"
             type="phone"
@@ -184,7 +181,7 @@ const StudentForm = ({
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
             <CustomFormField
               label="Date of Birth"
-              name="birthdate"
+              name="birthDate"
               placeholder="dd/mm/yyyy"
               isRequired
               type="date"
@@ -260,7 +257,7 @@ const StudentForm = ({
             }))}
             disabled
           />
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
             <CustomFormField
               label="Municipality"
               name="municipality"
@@ -286,6 +283,16 @@ const StudentForm = ({
                 value: option,
               }))}
               disabled={isLoading || !selectedMunicipalityName}
+            />
+            <CustomFormField
+              label="Zip Code"
+              name="zipCode"
+              placeholder="4114"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              type="text"
+              control={form.control}
+              disabled={isLoading}
             />
           </div>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
