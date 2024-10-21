@@ -4,7 +4,7 @@ import { useSaveStudent } from "@/data/student";
 import { useAddressData } from "@/functions/address-selection";
 import { StudentValidator } from "@/functions/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Students } from "@prisma/client";
+import { Programs, Sections, Students, YearLevels } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -13,8 +13,20 @@ import { Form } from "../ui/form";
 import Heading from "../ui/heading";
 import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
-const StudentForm = ({ initialData }: { initialData: Students | null }) => {
+const StudentForm = ({
+  initialData,
+  yearLevel,
+  programs,
+  sections,
+}: {
+  initialData: Students | null;
+  yearLevel: YearLevels[];
+  programs: Programs[];
+  sections: Sections[];
+}) => {
   const router = useRouter();
   const title = initialData
     ? "Edit Student Information"
@@ -43,7 +55,7 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
           birthDate: "",
           age: "",
           gender: "",
-          civilStatus: "",
+          maritalStatus: "",
           phoneNumber: "",
           region: "CALABARZON",
           province: "Cavite",
@@ -56,9 +68,9 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
           profileImage: "",
           elementarySchool: "",
           highSchool: "",
-          yearLevelId: "",
-          programId: "",
-          sectionId: "",
+          yearLevel: "",
+          program: "",
+          section: "",
         },
   });
 
@@ -90,6 +102,15 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
       <Heading title={title} description={description} />
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col space-y-3">
+          <CustomFormField
+            label="Student Number"
+            name="studentNumber"
+            placeholder="Enter student number"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            disabled={isLoading}
+          />
           <div className="grid md:grid-cols-4 grid-cols-1 gap-3">
             <CustomFormField
               label="First Name"
@@ -143,8 +164,17 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
             disabled={isLoading}
           />
           <CustomFormField
+            label="Password"
+            name="password"
+            placeholder="--------"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            disabled={isLoading}
+          />
+          <CustomFormField
             label="Phone Number"
-            name="contactNumber"
+            name="phoneNumber"
             type="phone"
             fieldType={FormFieldType.PHONE_INPUT}
             control={form.control}
@@ -175,7 +205,7 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
             <CustomFormField
               label="Sex"
-              name="sex"
+              name="gender"
               placeholder="Select your sex"
               isRequired
               fieldType={FormFieldType.SELECT}
@@ -257,6 +287,73 @@ const StudentForm = ({ initialData }: { initialData: Students | null }) => {
               }))}
               disabled={isLoading || !selectedMunicipalityName}
             />
+          </div>
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Elementary School"
+              name="elementarySchool"
+              placeholder="Dasmarinas II Central School"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              type="text"
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="High School"
+              name="highSchool"
+              placeholder="Dasmarinas National High School"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              type="text"
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Year Level"
+              name="yearLevel"
+              placeholder="Select your year level"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              dynamicOptions={yearLevel.map((option) => ({
+                label: option.name,
+                value: option.id,
+              }))}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Program"
+              name="program"
+              placeholder="Select your program"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              dynamicOptions={programs.map((option) => ({
+                label: option.name,
+                value: option.id,
+              }))}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Section"
+              name="section"
+              placeholder="Select your section"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              dynamicOptions={sections.map((option) => ({
+                label: option.name,
+                value: option.id,
+              }))}
+              disabled={isLoading}
+            />
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
+              {action}
+            </Button>
           </div>
         </div>
       </form>

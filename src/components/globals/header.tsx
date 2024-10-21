@@ -1,27 +1,36 @@
-import { IconSearch } from "@tabler/icons-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import React from "react";
-import { Input } from "../ui/input";
-import { ModeToggle } from "./mode-toggle";
-import NotificationDropdown from "./notification-dropdown";
-import UserDropdown from "./user-dropdown";
+import { SidebarTrigger } from "../ui/sidebar";
+import { Separator } from "../ui/separator";
 
 const Header = () => {
   return (
-    <div className="md:flex md:items-center md:justify-between bg-[#f7f7f7] dark:bg-neutral-950 px-10 border-b h-16 w-full hidden">
-      <div className="relative flex-1 md:grow-0">
-        <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search..."
-          className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-        />
+    <header className="flex h-16 shrink-0 items-center gap-2">
+      <div className="flex items-center gap-2 px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="hidden md:block">
+              <BreadcrumbLink href="#">
+                Building Your Application
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="hidden md:block" />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
-      <div className="flex items-center">
-        <ModeToggle />
-        <NotificationDropdown />
-        <UserDropdown />
-      </div>
-    </div>
+    </header>
   );
 };
 

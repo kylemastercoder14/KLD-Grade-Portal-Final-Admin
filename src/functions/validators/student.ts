@@ -9,7 +9,7 @@ export const StudentValidator = z.object({
   birthDate: z.string().min(1, { message: "Birth date is required" }),
   age: z.string().min(1, { message: "Age is required" }),
   gender: z.string().min(1, { message: "Gender is required" }),
-  civilStatus: z.string().min(1, { message: "Civil status is required" }),
+  maritalStatus: z.string().min(1, { message: "Marital status is required" }),
   phoneNumber: z.string().min(1, { message: "Phone number is required" }),
   region: z.string().min(1, { message: "Region is required" }),
   province: z.string().min(1, { message: "Province is required" }),
@@ -36,7 +36,7 @@ export const StudentValidator = z.object({
   highSchool: z.string().min(1, { message: "High school is required" }),
 
   // Relationships
-  yearLevelId: z.string().min(1, { message: "Year level is required" }),
-  programId: z.string().min(1, { message: "Program is required" }),
-  sectionId: z.string().min(1, { message: "Section is required" }),
+  yearLevel: z.string().min(1, { message: "Year level is required" }),
+  program: z.string().min(1, { message: "Program is required" }),
+  section: z.string().min(1, { message: "Section is required" }),
 });

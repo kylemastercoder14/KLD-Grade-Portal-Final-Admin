@@ -9,9 +9,27 @@ const StudentPage = async ({ params }: { params: { studentId: string } }) => {
     },
   });
 
+  const yearLevel = await db.yearLevels.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  })
+
+  const programs = await db.programs.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  })
+
+  const sections = await db.sections.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  })
+
   return (
     <div className="flex-1 space-y-4">
-      <StudentForm initialData={student} />
+      <StudentForm initialData={student} yearLevel={yearLevel} programs={programs} sections={sections} />
     </div>
   );
 };
