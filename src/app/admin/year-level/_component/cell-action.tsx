@@ -17,6 +17,7 @@ import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import YearLevelForm from "@/components/forms/year-level-form";
 import { useDeleteYearLevel } from "@/data/year-level";
+import { useRouter } from "next/navigation";
 
 interface CellActionProps {
   data: YearLevelColumn;
@@ -24,6 +25,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [initialData, setInitialData] = useState<YearLevelColumn | null>(null);
   const onCopy = (name: string) => {
@@ -37,6 +39,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteYearLevel(data.id, {
       onSuccess: () => {
         setOpen(false);
+        router.refresh();
       },
     });
   };
