@@ -52,6 +52,48 @@ model Students {
   sections  Sections @relation(fields: [sectionId], references: [id])
 }
 
+model Teachers {
+  id            String  @id @default(cuid())
+  employeeId    String
+  firstName     String
+  middleName    String?
+  lastName      String
+  extensionName String?
+  birthDate     String
+  age           String
+  gender        String
+  civilStatus   String
+  phoneNumber   String
+  region        String
+  province      String
+  city          String
+  barangay      String
+  houseNumber   String
+  zipCode       String
+  email         String
+  password      String
+  profileImage  String?
+  isArchive     Boolean @default(false)
+  position      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  asssignTeacher AssignTeacher[]
+}
+
+model AssignTeacher {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherId String
+  teacher  Teachers @relation(fields: [teacherId], references: [id])
+
+  sectionId String
+  section  Sections @relation(fields: [sectionId], references: [id])
+}
+
 model YearLevels {
   id        String   @id @default(cuid())
   name      String
@@ -88,6 +130,7 @@ model Sections {
   programs  Programs @relation(fields: [programId], references: [id])
 
   student Students[]
+  assignTeacher AssignTeacher[]
 }
 
 model Courses {
