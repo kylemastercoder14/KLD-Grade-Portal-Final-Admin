@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  LifeBuoy,
-  Send,
-} from "lucide-react"; // Lucide icons
+import { LifeBuoy, Send } from "lucide-react"; // Lucide icons
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -18,14 +15,12 @@ import {
 import {
   IconBooks,
   IconBrandTabler,
-  IconCalendarMonth,
-  IconDatabase,
   IconLayersIntersect,
   IconLayoutColumns,
-  IconLogs,
+  IconLayoutDashboard,
   IconNotebook,
   IconSchool,
-  IconSpeakerphone,
+  IconUsers,
 } from "@tabler/icons-react";
 import Image from "next/image";
 
@@ -62,29 +57,45 @@ const data = {
       icon: IconNotebook,
     },
     {
-      title: "Semesters",
-      url: "/admin/semesters",
-      icon: IconCalendarMonth,
-    },
-    {
       title: "Students",
       url: "/admin/students",
       icon: IconSchool,
     },
     {
-      title: "Announcements",
-      url: "/admin/announcements",
-      icon: IconSpeakerphone,
+      title: "Teachers",
+      url: "/admin/teacher",
+      icon: IconUsers,
     },
     {
-      title: "Logs",
-      url: "/admin/logs",
-      icon: IconLogs,
-    },
-    {
-      title: "Back-up Database",
-      url: "/admin/database",
-      icon: IconDatabase,
+      title: "Others",
+      url: "#",
+      icon: IconLayoutDashboard,
+      items: [
+        {
+          title: "Assign Adviser",
+          url: "/admin/assign-adviser",
+        },
+        {
+          title: "Assign Course Teacher",
+          url: "/admin/assign-course-teacher",
+        },
+        {
+          title: "Semesters",
+          url: "/admin/semesters",
+        },
+        {
+          title: "Announcements",
+          url: "/admin/announcements",
+        },
+        {
+          title: "Logs",
+          url: "/admin/logs",
+        },
+        {
+          title: "Back-up Database",
+          url: "/admin/database",
+        },
+      ],
     },
   ],
   navSecondary: [
@@ -109,9 +120,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <Image src="/images/kld-logo.png" alt="Logo" width={40} height={40} />
+                <Image
+                  src="/images/kld-logo.png"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">KLD Grade Portal</span>
+                  <span className="truncate font-semibold">
+                    KLD Grade Portal
+                  </span>
                   <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
