@@ -1,95 +1,36 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { IconCirclePlus, IconFileDescription } from "@tabler/icons-react";
+import React, { RefObject, useEffect, useState } from "react";
+import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import YearLevelForm from "@/components/forms/year-level-form";
+import MoreButton from "@/components/globals/more-button";
 
-const TableHeader = ({ label, href }: { label: string; href?: string }) => {
+const TableHeader = ({ label, href, tableRef }: { label: string; href?: string; tableRef: RefObject<HTMLTableElement>; }) => {
   const [openYearLevelModal, setOpenYearLevelModal] = useState(false);
   const router = useRouter();
-  const [dateInfo, setDateInfo] = useState({
-    date: "",
-    day: "",
-    greeting: "",
-  });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (isMounted) {
-      // Function to update date, day, and greeting
-      const updateDateInfo = () => {
-        const now = new Date();
-
-        // Format the date
-        const dateOptions: Intl.DateTimeFormatOptions = {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        };
-
-        const formattedDate = now.toLocaleDateString(undefined, dateOptions);
-
-        // Get the current day
-        const dayOptions: Intl.DateTimeFormatOptions = { weekday: "long" };
-        const formattedDay = now.toLocaleDateString(undefined, dayOptions);
-
-        // Determine the greeting based on the current time
-        const hour = now.getHours();
-        let greeting = "";
-
-        if (hour < 12) {
-          greeting = "Good Morning";
-        } else if (hour < 18) {
-          greeting = "Good Afternoon";
-        } else {
-          greeting = "Good Evening";
-        }
-
-        // Set the state with updated values
-        setDateInfo({
-          date: formattedDate,
-          day: formattedDay,
-          greeting: greeting,
-        });
-      };
-
-      updateDateInfo();
-
-      // Optional: Update every minute to keep it dynamic
-      const intervalId = setInterval(updateDateInfo, 60000);
-
-      // Clean up the interval on component unmount
-      return () => clearInterval(intervalId);
-    }
-  }, [isMounted]);
-
   if (!isMounted) {
-    return null; // Avoid rendering until the component is mounted
+    return null;
   }
 
   return (
-    <div className="flex items-center mb-5 justify-between">
+    <div className="flex items-center mb-5 mt-5 justify-between">
       <div>
-        <p className="text-sm text-muted-foreground">
-          {dateInfo.day}, {dateInfo.date}
-        </p>
-        <p className="text-lg font-bold">
-          {dateInfo.greeting}, Victoria Balbio! 👋
+        <p className="text-xl font-bold">Year Level Record</p>
+        <p className="text-sm text-muted-foreground ">
+          Keep track of student distribution across different year levels and
+          monitor their academic progress.
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" className="h-7 gap-1">
-          <IconFileDescription className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Export CSV
-          </span>
-        </Button>
+        <MoreButton tableRef={tableRef} />
         <Button
           onClick={() =>
             href ? router.push(href) : setOpenYearLevelModal(true)
@@ -105,8 +46,8 @@ const TableHeader = ({ label, href }: { label: string; href?: string }) => {
       </div>
       {openYearLevelModal && (
         <YearLevelForm
-          initialData={null} // Pass any initial data for form, if any
-          onClose={() => setOpenYearLevelModal(false)} // Close the modal when done
+          initialData={null}
+          onClose={() => setOpenYearLevelModal(false)}
         />
       )}
     </div>

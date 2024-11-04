@@ -9,7 +9,7 @@ export const getAllCourses = async () => {
   try {
     const data = await db.courses.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
@@ -56,6 +56,16 @@ export const createCourse = async (
     };
   }
 };
+
+export const createBulkCourses = async (data: any[]) => {
+  try {
+    for (const course of data) {
+      await createCourse(course);
+    }
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+}
 
 // UPDATE COURSE IN THE DATABASE
 export const updateCourse = async (

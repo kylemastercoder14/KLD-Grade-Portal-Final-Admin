@@ -12,6 +12,11 @@ export const getAllStudents = async () => {
       orderBy: {
         createdAt: "asc",
       },
+      include: {
+        programs: true,
+        yearLevels: true,
+        sections: true,
+      },
     });
 
     if (!data) {
@@ -104,6 +109,57 @@ export const createStudent = async (
   }
 };
 
+const parseDateFromExcelNumber = (excelDate: number): string => {
+  const jsDate = new Date((excelDate - 25569) * 86400 * 1000); // Convert Excel date to JS date
+  return jsDate.toISOString().split("T")[0]; // Return in 'YYYY-MM-DD' format
+};
+
+export const createBulkStudents = async (data: any[]) => {
+  try {
+    const processedData = data.map((student) => ({
+      studentNumber: String(student.studentNumber),
+      firstName: String(student.firstName),
+      middleName: student.middleName ? String(student.middleName) : "",
+      lastName: String(student.lastName),
+      extensionName: student.extensionName
+        ? String(student.extensionName)
+        : "Unknown",
+      birthDate: parseDateFromExcelNumber(student.birthDate),
+      age: String(student.age),
+      gender: String(student.gender),
+      maritalStatus: student.civilStatus
+        ? String(student.civilStatus)
+        : "Unknown", // Map to maritalStatus
+      phoneNumber: String(student.phoneNumber),
+      region: String(student.region),
+      province: String(student.province),
+      municipality: student.city ? String(student.city) : "",
+      barangay: String(student.barangay),
+      houseNumber: String(student.houseNumber),
+      zipCode: String(student.zipCode),
+      email: String(student.email),
+      password: String(student.password),
+      elementarySchool: String(student.elementarySchool),
+      highSchool: String(student.highSchool),
+      yearLevel: student.yearLevelId
+        ? String(student.yearLevelId)
+        : "defaultYearLevel", // Map to yearLevel
+      program: student.programId ? String(student.programId) : "",
+      section: student.sectionId ? String(student.sectionId) : "",
+      profileImage: student.profileImage ? String(student.profileImage) : "",
+    }));
+
+    await Promise.all(
+      processedData.map((student) => createStudent(student))
+    );
+
+    return { success: "Students created successfully" };
+  } catch (error) {
+    console.error("Error creating students:", error);
+    return { error: "Failed to create students. Please try again." };
+  }
+};
+
 export const updateStudent = async (
   values: z.infer<typeof StudentValidator>,
   studentId: string
@@ -174,7 +230,7 @@ export const updateStudent = async (
       },
       where: {
         id: studentId,
-      }
+      },
     });
 
     return { success: "Student updated successfully", student };

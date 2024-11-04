@@ -37,6 +37,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteProgram(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
       },
     });
   };

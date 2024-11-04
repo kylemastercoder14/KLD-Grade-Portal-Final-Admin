@@ -1,10 +1,6 @@
-
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   dehydrate,
@@ -14,7 +10,7 @@ import {
 import React from "react";
 import { getAllPrograms } from "@/actions/programs";
 import ProgramClient from "./_component/client";
-import TableHeader from "./_component/table-header";
+import GreetingsHeader from "@/components/globals/greetings-header";
 
 const Programs = async () => {
   const queryClient = new QueryClient();
@@ -30,15 +26,8 @@ const Programs = async () => {
 
   return (
     <div>
-      <TableHeader label="Add Program" />
+      <GreetingsHeader />
       <Card>
-        <CardHeader>
-          <CardTitle>Program Record</CardTitle>
-          <CardDescription>
-            Keep track of student distribution across different programs and
-            monitor their academic progress.
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <HydrationBoundary state={dehydratedState}>
             <ProgramClient />

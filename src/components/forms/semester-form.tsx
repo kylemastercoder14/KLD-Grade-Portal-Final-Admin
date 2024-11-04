@@ -46,7 +46,10 @@ const SemesterForm = ({
 
   async function onSubmit(values: z.infer<typeof SemesterValidator>) {
     saveSemester(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

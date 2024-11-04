@@ -9,7 +9,7 @@ export const getAllSections = async () => {
   try {
     const data = await db.sections.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       include: {
         student: true,

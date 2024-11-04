@@ -68,7 +68,10 @@ const SectionForm = ({
 
   async function onSubmit(values: z.infer<typeof SectionValidators>) {
     saveSection(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

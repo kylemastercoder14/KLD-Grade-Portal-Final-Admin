@@ -44,7 +44,10 @@ const ProgramForm = ({
 
   async function onSubmit(values: z.infer<typeof ProgramValidators>) {
     saveProgram(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

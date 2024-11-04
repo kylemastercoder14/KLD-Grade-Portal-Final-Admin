@@ -1,9 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   dehydrate,
@@ -12,10 +9,10 @@ import {
 } from "@tanstack/react-query";
 import React from "react";
 import SectionClient from "./_component/client";
-import TableHeader from "./_component/table-header";
 import { getAllSections } from "@/actions/sections";
 import { getAllPrograms } from "@/actions/programs";
 import { getAllYearLevel } from "@/actions/year-level";
+import GreetingsHeader from "@/components/globals/greetings-header";
 
 const Sections = async () => {
   const queryClient = new QueryClient();
@@ -42,15 +39,8 @@ const Sections = async () => {
   return (
     <HydrationBoundary state={dehydratedState}>
       <div>
-        <TableHeader label="Add Section" />
+        <GreetingsHeader />
         <Card>
-          <CardHeader>
-            <CardTitle>Section Record</CardTitle>
-            <CardDescription>
-              Keep track of student distribution across different sections and
-              monitor their academic progress.
-            </CardDescription>
-          </CardHeader>
           <CardContent>
             <SectionClient />
           </CardContent>

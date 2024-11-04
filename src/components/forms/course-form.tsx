@@ -54,7 +54,10 @@ const CourseForm = ({
 
   async function onSubmit(values: z.infer<typeof CourseValidators>) {
     saveCourse(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

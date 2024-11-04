@@ -11,16 +11,15 @@ export type StudentColumn = {
   id: string;
   name: string;
   studentId: string;
+  programId: string;
+  yearLevelId: string;
+  sectionId: string;
   email: string;
   imageUrl: string;
   createdAt: string;
 };
 
 export const columns: ColumnDef<StudentColumn>[] = [
-  {
-    accessorKey: "studentId",
-    header: "Student No.",
-  },
   {
     accessorKey: "name",
     header: "Student",
@@ -47,6 +46,22 @@ export const columns: ColumnDef<StudentColumn>[] = [
         </div>
       </div>
     ),
+  },
+  {
+    accessorKey: "studentId",
+    header: "Student No.",
+  },
+  {
+    accessorKey: "programId",
+    header: "Program",
+  },
+  {
+    accessorKey: "yearLevelId",
+    header: "Year Level",
+  },
+  {
+    accessorKey: "sectionId",
+    header: "Section",
   },
   {
     accessorKey: "createdAt",

@@ -1,10 +1,6 @@
-
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   dehydrate,
@@ -13,8 +9,8 @@ import {
 } from "@tanstack/react-query";
 import React from "react";
 import SemesterClient from "./_component/client";
-import TableHeader from "./_component/table-header";
 import { getAllSemesters } from "@/actions/semester";
+import GreetingsHeader from "@/components/globals/greetings-header";
 
 const Semester = async () => {
   const queryClient = new QueryClient();
@@ -29,23 +25,16 @@ const Semester = async () => {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <div>
-      <TableHeader label="Add Semester" />
-      <Card>
-        <CardHeader>
-          <CardTitle>Semester Record</CardTitle>
-          <CardDescription>
-            Keep track of student distribution across different semester and
-            monitor their academic progress.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <HydrationBoundary state={dehydratedState}>
+    <HydrationBoundary state={dehydratedState}>
+      <div>
+        <GreetingsHeader />
+        <Card>
+          <CardContent>
             <SemesterClient />
-          </HydrationBoundary>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </HydrationBoundary>
   );
 };
 

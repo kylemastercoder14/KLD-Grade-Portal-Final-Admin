@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useGetSemester } from "@/data/semester";
 import { columns, SemesterColumn } from "./column";
+import TableHeader from "./table-header";
 
 const SemesterClient = () => {
+  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: semesterData, error, isLoading } = useGetSemester();
 
@@ -26,7 +28,7 @@ const SemesterClient = () => {
       id: item.id,
       name: item.name,
       year: item.year,
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
 
   if (!isMounted) {
@@ -34,14 +36,17 @@ const SemesterClient = () => {
   }
 
   return (
-    <>
-      <DataTable
-        loading={isLoading}
-        searchKey="name"
-        columns={columns}
-        data={formattedData}
-      />
-    </>
+    <div>
+      <TableHeader label="Add Semester" tableRef={tableRef} />
+      <div ref={tableRef}>
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={formattedData}
+        />
+      </div>
+    </div>
   );
 };
 

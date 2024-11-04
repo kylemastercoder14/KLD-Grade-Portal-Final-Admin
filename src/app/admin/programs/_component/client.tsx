@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { columns } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { ProgramColumn } from "./column";
 import { format } from "date-fns";
 import { useGetProgram } from "@/data/programs";
+import TableHeader from "./table-header";
 
 const ProgramClient = () => {
+  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: programData, error, isLoading } = useGetProgram();
 
@@ -29,7 +31,7 @@ const ProgramClient = () => {
       code: item.code,
       students: item.student.length.toString(),
       sections: item.section.length.toString(),
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
 
   if (!isMounted) {
@@ -37,14 +39,17 @@ const ProgramClient = () => {
   }
 
   return (
-    <>
-      <DataTable
-        loading={isLoading}
-        searchKey="name"
-        columns={columns}
-        data={formattedData}
-      />
-    </>
+    <div>
+      <TableHeader tableRef={tableRef} label="Add Program" />
+      <div ref={tableRef}>
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={formattedData}
+        />
+      </div>
+    </div>
   );
 };
 

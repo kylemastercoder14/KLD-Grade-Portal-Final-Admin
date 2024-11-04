@@ -21,7 +21,6 @@ const YearLevelForm = ({
   initialData: any;
   onClose: () => void;
 }) => {
-
   const title = initialData ? "Edit Year Level" : "Add Year Level";
   const description = initialData
     ? "Make sure to click save changes after you update the year level."
@@ -39,13 +38,15 @@ const YearLevelForm = ({
         },
   });
 
-  const { mutate: saveYearLevel, isPending: isSaving } = useSaveYearLevel(
-    initialData
-  );
+  const { mutate: saveYearLevel, isPending: isSaving } =
+    useSaveYearLevel(initialData);
 
   async function onSubmit(values: z.infer<typeof YearLevelValidators>) {
     saveYearLevel(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 
@@ -71,9 +72,7 @@ const YearLevelForm = ({
                   disabled={isSaving}
                 />
                 <Button type="submit" disabled={isSaving} size="sm">
-                  {isSaving && (
-                    <Loader className="animate-spin w-4 h-4 mr-2" />
-                  )}
+                  {isSaving && <Loader className="animate-spin w-4 h-4 mr-2" />}
                   {action}
                 </Button>
               </div>
