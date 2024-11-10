@@ -294,7 +294,7 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
             disabled={isLoading}
           />
         </div>
-        <Button type="submit" className="mt-3" disabled={isLoading}>
+        <Button type="submit" className="mt-3 md:w-auto w-full" disabled={isLoading}>
           {isLoading && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
           {action}
         </Button>

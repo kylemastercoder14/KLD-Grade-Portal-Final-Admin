@@ -56,7 +56,7 @@ const TableHeader = ({
     }
   };
   return (
-    <div className="flex items-center mb-5 mt-5 justify-between">
+    <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 gap-2 md:justify-between">
       <div>
         <p className="text-xl font-bold">Course Record</p>
         <p className="text-sm text-muted-foreground ">
@@ -93,7 +93,7 @@ const TableHeader = ({
           className="h-7 gap-1"
         >
           <IconCirclePlus className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+          <span>
             {label}
           </span>
         </Button>

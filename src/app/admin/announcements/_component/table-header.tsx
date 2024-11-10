@@ -1,84 +1,36 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { IconCirclePlus, IconFileDescription } from "@tabler/icons-react";
+import React, { RefObject, useState } from "react";
+import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import AnnouncementForm from "@/components/forms/announcement-form";
+import MoreButton from "@/components/globals/more-button";
 
-const TableHeader = ({ label, href }: { label: string; href?: string }) => {
+const TableHeader = ({
+  label,
+  href,
+  tableRef,
+}: {
+  label: string;
+  href?: string;
+  tableRef: RefObject<HTMLTableElement>;
+}) => {
   const [openAnnouncementModal, setOpenAnnouncementModal] = useState(false);
   const router = useRouter();
-  const [dateInfo, setDateInfo] = useState({
-    date: "",
-    day: "",
-    greeting: "",
-  });
-
-  useEffect(() => {
-    // Function to update date, day, and greeting
-    const updateDateInfo = () => {
-      const now = new Date();
-
-      // Format the date
-      const dateOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      };
-
-      const formattedDate = now.toLocaleDateString(undefined, dateOptions);
-
-      // Get the current day
-      const dayOptions: Intl.DateTimeFormatOptions = { weekday: "long" };
-      const formattedDay = now.toLocaleDateString(undefined, dayOptions);
-
-      // Determine the greeting based on the current time
-      const hour = now.getHours();
-      let greeting = "";
-
-      if (hour < 12) {
-        greeting = "Good Morning";
-      } else if (hour < 18) {
-        greeting = "Good Afternoon";
-      } else {
-        greeting = "Good Evening";
-      }
-
-      // Set the state with updated values
-      setDateInfo({
-        date: formattedDate,
-        day: formattedDay,
-        greeting: greeting,
-      });
-    };
-
-    updateDateInfo();
-
-    // Optional: Update every minute to keep it dynamic
-    const intervalId = setInterval(updateDateInfo, 60000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
 
   return (
-    <div className="flex items-center mb-5 justify-between">
+    <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 gap-2 md:justify-between">
       <div>
+        <p className="text-xl font-bold">Announcement Record</p>
         <p className="text-sm text-muted-foreground">
-          {dateInfo.day}, {dateInfo.date}
-        </p>
-        <p className="text-lg font-bold">
-          {dateInfo.greeting}, Victoria Balbio! 👋
+          Here you can manage all announcements, including adding new ones and
+          viewing existing records. Please ensure that the information provided
+          is accurate and up-to-date.
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" className="h-7 gap-1">
-          <IconFileDescription className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Export CSV
-          </span>
-        </Button>
+        <MoreButton tableRef={tableRef} />
         <Button
           onClick={() =>
             href ? router.push(href) : setOpenAnnouncementModal(true)
@@ -87,9 +39,7 @@ const TableHeader = ({ label, href }: { label: string; href?: string }) => {
           className="h-7 gap-1"
         >
           <IconCirclePlus className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            {label}
-          </span>
+          <span>{label}</span>
         </Button>
       </div>
       {openAnnouncementModal && (

@@ -357,7 +357,7 @@ const StudentForm = ({
               }))}
               disabled={isLoading}
             />
-            <Button type="submit" disabled={isLoading}>
+            <Button className="mt-2" type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
               {action}
             </Button>

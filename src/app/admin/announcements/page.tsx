@@ -1,19 +1,13 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 import React from "react";
-import TableHeader from "./_component/table-header";
 import { getAllAnnouncements } from "@/actions/announcement";
 import AnnouncementClient from "./_component/client";
+import GreetingsHeader from "@/components/globals/greetings-header";
 
 const Announcements = async () => {
   const queryClient = new QueryClient();
@@ -29,16 +23,8 @@ const Announcements = async () => {
 
   return (
     <div>
-      <TableHeader label="Add Announcement" />
+      <GreetingsHeader />
       <Card>
-        <CardHeader>
-          <CardTitle>Announcement Record</CardTitle>
-          <CardDescription>
-            Here you can manage all announcements, including adding new ones and
-            viewing existing records. Please ensure that the information
-            provided is accurate and up-to-date.
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <HydrationBoundary state={dehydratedState}>
             <AnnouncementClient />

@@ -203,7 +203,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex md:flex-row flex-col md:items-center md:justify-between no-print py-3">
+      <div className="flex md:flex-row flex-col md:items-center md:justify-between no-print gap-2 py-3">
         <p className="text-sm font-semibold text-muted-foreground">
           Showing{" "}
           {table.getState().pagination.pageIndex *
