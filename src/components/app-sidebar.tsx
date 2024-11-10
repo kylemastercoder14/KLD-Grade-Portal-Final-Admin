@@ -119,7 +119,7 @@ export function AppSidebar({ admin, ...props }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/admin/dashboard">
                 <Image
                   src="/images/kld-logo.png"
                   alt="Logo"

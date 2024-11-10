@@ -104,7 +104,7 @@ export function DataTable<TData, TValue>({
   const showResetButton = globalFilter || selectedFilterValue;
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <div className="flex gap-3 items-center py-4">
         <div className="flex no-print relative items-center">
           <Search className="absolute left-3 top-[33%] transform -translate-1/2 text-muted-foreground w-4 h-4" />
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
         </div>
         {!isFiltering && filterValues && (
           <>
-            <div className="w-[350px]">
+            <div className="md:w-[350px] w-full">
               <Select
                 defaultValue={selectedFilterValue}
                 onValueChange={handleDataChange}
@@ -145,8 +145,8 @@ export function DataTable<TData, TValue>({
           </>
         )}
       </div>
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border max-w-full overflow-x-auto">
+        <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
