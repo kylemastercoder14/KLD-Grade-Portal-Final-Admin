@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const GreetingsHeader = () => {
@@ -8,6 +9,8 @@ const GreetingsHeader = () => {
     day: "",
     greeting: "",
   });
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Function to update date, day, and greeting
@@ -45,6 +48,8 @@ const GreetingsHeader = () => {
         day: formattedDay,
         greeting: greeting,
       });
+
+      setLoading(false);
     };
 
     updateDateInfo();
@@ -55,6 +60,14 @@ const GreetingsHeader = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin" size={100} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center mb-5 justify-between">

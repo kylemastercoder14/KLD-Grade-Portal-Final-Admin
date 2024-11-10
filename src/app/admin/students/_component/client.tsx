@@ -7,21 +7,33 @@ import { format } from "date-fns";
 import { columns, StudentColumn } from "./column";
 import { useGeStudent } from "@/data/student";
 import TableHeader from "./table-header";
+import { useGetProgram } from "@/data/programs";
 
 const StudentClient = () => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
-  const { data: studentData, error, isLoading } = useGeStudent();
+  const {
+    data: studentData,
+    error: studentError,
+    isLoading: studentLoading,
+  } = useGeStudent();
+  const {
+    data: programData,
+    error: programError,
+    isLoading: programLoading,
+  } = useGetProgram();
 
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
 
   React.useEffect(() => {
-    if (error) {
-      toast.error(error.message || "An error occurred");
+    if (studentError || programError) {
+      toast.error(
+        studentError?.message || programError?.message || "An error occurred"
+      );
     }
-  }, [error]);
+  }, [studentError, programError]);
 
   const formattedData: StudentColumn[] =
     studentData?.data?.map((item) => ({
@@ -49,7 +61,9 @@ const StudentClient = () => {
       />
       <div ref={tableRef}>
         <DataTable
-          loading={isLoading}
+          filterColumn="programId"
+          filterValues={programData?.data?.map((item) => item.name)}
+          loading={studentLoading || programLoading}
           searchKey="name"
           columns={columns}
           data={formattedData}

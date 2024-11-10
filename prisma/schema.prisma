@@ -13,6 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Admin {
+  id       String @id @default(cuid())
+  username String
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Students {
   id            String  @id @default(cuid())
   studentNumber String
@@ -79,19 +88,35 @@ model Teachers {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  asssignTeacher AssignTeacher[]
+  asssignTeacher      AssignTeacher[]
+  assignCourseTeacher AssignCourseTeacher[]
 }
 
 model AssignTeacher {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   teacherId String
-  teacher  Teachers @relation(fields: [teacherId], references: [id])
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
 
   sectionId String
-  section  Sections @relation(fields: [sectionId], references: [id])
+  section   Sections @relation(fields: [sectionId], references: [id])
+}
+
+model AssignCourseTeacher {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherId String
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
+
+  sectionId String
+  section   Sections @relation(fields: [sectionId], references: [id])
+
+  courseId String
+  course   Courses @relation(fields: [courseId], references: [id])
 }
 
 model YearLevels {
@@ -129,8 +154,9 @@ model Sections {
   programId String
   programs  Programs @relation(fields: [programId], references: [id])
 
-  student Students[]
-  assignTeacher AssignTeacher[]
+  student             Students[]
+  assignTeacher       AssignTeacher[]
+  assignCourseTeacher AssignCourseTeacher[]
 }
 
 model Courses {
@@ -142,6 +168,8 @@ model Courses {
   isArchive    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  assignCourseTeacher AssignCourseTeacher[]
 }
 
 model Semester {

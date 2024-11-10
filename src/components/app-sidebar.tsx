@@ -23,13 +23,13 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import { Admin } from "@prisma/client";
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  admin: Admin | null;
+}
 
 const data = {
-  user: {
-    name: "Victoria Balbio",
-    email: "Administrator",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -112,7 +112,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ admin, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -142,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser admin={admin} />
       </SidebarFooter>
     </Sidebar>
   );

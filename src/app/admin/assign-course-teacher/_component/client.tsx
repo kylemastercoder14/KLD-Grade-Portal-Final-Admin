@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useRef } from "react";
-import { columns, AssignAdviserColumn } from "./column";
+import { columns, AssignCourseTeacherColumn } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import TableHeader from "./table-header";
-import { useGetAssignAdviser } from "@/data/assign-adviser";
+import { useGetAssignCourseTeacher } from "@/data/assign-course-teacher";
 
-const AssignAdviserClient = () => {
+const AssignCourseTeacherClient = () => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
-  const { data: assignAdviserData, error, isLoading } = useGetAssignAdviser();
+  const { data: assignCourseTeacherData, error, isLoading } = useGetAssignCourseTeacher();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -23,12 +23,14 @@ const AssignAdviserClient = () => {
     }
   }, [error]);
 
-  const formattedData: AssignAdviserColumn[] =
-    assignAdviserData?.data?.map((item) => ({
+  const formattedData: AssignCourseTeacherColumn[] =
+    assignCourseTeacherData?.data?.map((item) => ({
       id: item.id,
       teacherId: item.teacherId,
       sectionId: item.sectionId,
       name: item.teacher.firstName + " " + item.teacher.lastName,
+      course: item.course.name,
+      courseId: item.courseId,
       section: item.section.name,
       createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
@@ -39,7 +41,7 @@ const AssignAdviserClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Assign Adviser" />
+      <TableHeader tableRef={tableRef} label="Assign Course Teacher" />
       <div ref={tableRef}>
         <DataTable
           loading={isLoading}
@@ -52,4 +54,4 @@ const AssignAdviserClient = () => {
   );
 };
 
-export default AssignAdviserClient;
+export default AssignCourseTeacherClient;

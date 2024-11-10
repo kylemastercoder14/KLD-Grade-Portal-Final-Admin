@@ -13,42 +13,46 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import AlertModal from "@/components/ui/alert-modal";
-import { AssignAdviserColumn } from "./column";
-import AssignAdviserForm from "@/components/forms/assign-form";
+import { AssignCourseTeacherColumn } from "./column";
 import { useGetTeacher } from "@/data/teacher";
 import { useGetSection } from "@/data/sections";
-import { useDeleteAssignAdviser } from "@/data/assign-adviser";
+import { useGetCourses } from "@/data/courses";
+import { useDeleteAssignCourseTeacher } from "@/data/assign-course-teacher";
+import AssignCourseTeacherForm from "@/components/forms/assign-course-teacher-form ";
 
 interface CellActionProps {
-  data: AssignAdviserColumn;
+  data: AssignCourseTeacherColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { data: sectionData, error: sectionError } = useGetSection();
   const { data: teacherData, error: teacherError } = useGetTeacher();
+  const { data: courseData, error: courseError } = useGetCourses();
   const [open, setOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<AssignAdviserColumn | null>(
-    null
-  );
+  const [initialData, setInitialData] =
+    useState<AssignCourseTeacherColumn | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
   useEffect(() => {
-    if (sectionError || teacherError) {
+    if (teacherError || sectionError || courseError) {
       toast.error(
-        sectionError?.message || teacherError?.message || "An error occurred"
+        teacherError?.message ||
+          sectionError?.message ||
+          courseError?.message ||
+          "An error occurred"
       );
     }
-  }, [sectionError, teacherError]);
+  }, [teacherError, sectionError, courseError]);
 
-  const { mutate: deleteAssignAdviser, isPending: isDeleting } =
-    useDeleteAssignAdviser();
+  const { mutate: deleteAssignCourseTeacher, isPending: isDeleting } =
+    useDeleteAssignCourseTeacher();
 
   const onDelete = async () => {
-    deleteAssignAdviser(data.id, {
+    deleteAssignCourseTeacher(data.id, {
       onSuccess: () => {
         setOpen(false);
       },
@@ -70,6 +74,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     value: item.id,
   }));
 
+  const courseOption = (courseData?.data ?? []).map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
+
   return (
     <>
       <AlertModal
@@ -79,7 +88,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onConfirm={onDelete}
       />
       {formOpen && (
-        <AssignAdviserForm
+        <AssignCourseTeacherForm
+          course={courseOption}
           section={sectionOptions}
           teacher={teacherOptions}
           initialData={initialData}

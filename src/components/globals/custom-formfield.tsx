@@ -44,6 +44,14 @@ import { DynamicSelect } from "./dynamic-select";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "./image-uploader";
 import { DynamicArraySelect } from "./dynamic-array-select";
+import {
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
+} from "@/components/ui/multi-select";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -101,7 +109,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               <div className="shad-input-outer">
                 <Input
                   type={
-                    type === "password" && !showPassword ? "password" : type
+                    type === "password" && !showPassword ? "text" : type
                   }
                   placeholder={placeholder}
                   disabled={disabled}
@@ -210,6 +218,51 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <InputOTPSlot index={5} />
           </InputOTP>
         </FormControl>
+      );
+
+    case FormFieldType.MULTISELECT:
+      return (
+        <>
+          <FormControl>
+            <MultiSelector
+              values={field.value}
+              onValuesChange={field.onChange}
+              loop
+            >
+              <MultiSelectorTrigger
+                className={cn(
+                  "shad-select-trigger",
+                  !field.value && "text-muted-foreground"
+                )}
+              >
+                <MultiSelectorInput
+                  disabled={disabled}
+                  placeholder={placeholder}
+                />
+              </MultiSelectorTrigger>
+              <MultiSelectorContent>
+                <MultiSelectorList>
+                  {dynamicOptions && dynamicOptions.length > 0
+                    ? dynamicOptions.map((option) => (
+                        <MultiSelectorItem
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </MultiSelectorItem>
+                      ))
+                    : options?.map((option) => (
+                        <MultiSelectorItem key={option} value={option}>
+                          {option}
+                        </MultiSelectorItem>
+                      ))}
+                </MultiSelectorList>
+              </MultiSelectorContent>
+            </MultiSelector>
+          </FormControl>
+
+          {description && <FormDescription>{description}</FormDescription>}
+        </>
       );
 
     case FormFieldType.SELECT:

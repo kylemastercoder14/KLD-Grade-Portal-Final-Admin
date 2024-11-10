@@ -5,6 +5,7 @@ export enum FormFieldType {
   OTP_INPUT = "otpInput",
   SELECT = "select",
   DYNAMICSELECT = "dynamicSelect",
+  MULTISELECT = "multiSelect",
   DYNAMICSELECTARRAY = "dynamicSelectArray",
   RADIO = "radio",
   CHECKBOX = "checkbox",

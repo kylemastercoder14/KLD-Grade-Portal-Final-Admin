@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 import { AssignAdviserValidator } from "@/functions/validators";
@@ -40,14 +41,22 @@ export const createAssignAdviser = async (
   const { teacher, section } = validatedField.data;
 
   try {
-    const assignAdviser = await db.assignTeacher.create({
-      data: {
-        teacherId: teacher,
-        sectionId: section
-      },
+    const sectionsArray = Array.isArray(section) ? section : [section];
+
+    // Map through each section ID and create a record for each in the AssignTeacher table
+    const assignAdviserPromises = sectionsArray.map((sectionId: string) => {
+      return db.assignTeacher.create({
+        data: {
+          teacherId: teacher,
+          sectionId: sectionId,
+        },
+      });
     });
 
-    return { success: "Adviser assigned successfully", assignAdviser };
+    // Execute all create operations
+    const assignAdviserResults = await Promise.all(assignAdviserPromises);
+
+    return { success: "Adviser assigned successfully", assignAdviserResults };
   } catch (error: any) {
     return {
       error: `Failed to assign adviser. Please try again. ${
@@ -75,13 +84,14 @@ export const updateAssignAdviser = async (
   const { teacher, section } = validatedField.data;
 
   try {
+    const sectionId = Array.isArray(section) ? section[0] : section;
     const assignAdviser = await db.assignTeacher.update({
       where: {
         id: assignAdvisorId,
       },
       data: {
         teacherId: teacher,
-        sectionId: section
+        sectionId: sectionId,
       },
     });
 
@@ -110,8 +120,9 @@ export const deleteAssignAdviser = async (assignAdvisorId: string) => {
     return { success: "Assigned adviser deleted successfully", assignAdviser };
   } catch (error: any) {
     return {
-      error: `Failed to delete assigned adviser. Please try again. ${error.message || ""}`,
+      error: `Failed to delete assigned adviser. Please try again. ${
+        error.message || ""
+      }`,
     };
   }
 };
-

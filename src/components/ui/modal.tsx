@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import React from "react";
 
 interface ModalProps {
   title: string;
@@ -26,9 +27,18 @@ export const Modal: React.FC<ModalProps> = ({
   const onChange = (open: boolean) => {
     if (!open) {
       onClose();
-      window.location.reload();
     }
   };
+
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
