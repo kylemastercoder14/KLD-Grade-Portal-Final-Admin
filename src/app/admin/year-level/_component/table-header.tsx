@@ -21,7 +21,7 @@ const TableHeader = ({ label, href, tableRef }: { label: string; href?: string; 
   }
 
   return (
-    <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 md:justify-between">
+    <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 gap-2 md:justify-between">
       <div>
         <p className="text-xl font-bold">Year Level Record</p>
         <p className="text-sm text-muted-foreground ">

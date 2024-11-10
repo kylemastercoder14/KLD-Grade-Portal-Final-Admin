@@ -203,7 +203,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex md:flex-row flex-col items-center md:justify-between no-print py-3">
+      <div className="flex md:flex-row flex-col md:items-center md:justify-between no-print py-3">
         <p className="text-sm font-semibold text-muted-foreground">
           Showing{" "}
           {table.getState().pagination.pageIndex *
@@ -220,7 +220,7 @@ export function DataTable<TData, TValue>({
 
         <div className="flex items-center gap-x-5">
           <div className="flex items-center gap-x-2">
-            <span className="font-semibold text-sm">Items per page</span>
+            <span className="font-semibold text-sm md:block hidden">Items per page</span>
             <Select
               value={String(table.getState().pagination.pageSize)}
               onValueChange={(e) => {
