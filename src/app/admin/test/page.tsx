@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 
 type JsonData = Record<string, unknown>[];
 
-export const parseExcelFile = async (file: File): Promise<JsonData> => {
+const parseExcelFile = async (file: File): Promise<JsonData> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event: ProgressEvent<FileReader>) => {
