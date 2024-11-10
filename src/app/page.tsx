@@ -6,9 +6,9 @@ import { ModeToggle } from "@/components/globals/mode-toggle";
 
 const Home = () => {
   return (
-    <div className="flex flex-col relative h-screen items-center justify-center bg-[url('/images/school.jpg')] bg-no-repeat bg-cover">
+    <div className="flex flex-col relative h-screen overflow-hidden items-center justify-center bg-[url('/images/school.jpg')] bg-no-repeat bg-cover">
       <div className="overlay fixed bg-black/60 w-full h-full backdrop-blur-sm"></div>
-      <div className="absolute bottom-3 right-3 z-50 bg-white dark:bg-black p-1 rounded-full">
+      <div className="fixed bottom-3 right-3 z-50 bg-white dark:bg-black p-1 rounded-full">
         <ModeToggle />
       </div>
       <div className="z-10 relative">
