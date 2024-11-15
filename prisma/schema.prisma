@@ -24,7 +24,7 @@ model Admin {
 
 model Students {
   id            String  @id @default(cuid())
-  studentNumber String
+  studentNumber String  @unique
   firstName     String
   middleName    String?
   lastName      String
@@ -59,6 +59,9 @@ model Students {
 
   sectionId String
   sections  Sections @relation(fields: [sectionId], references: [id])
+
+  grades          Grades[]
+  documentRequest DocumentRequest[]
 }
 
 model Teachers {
@@ -132,18 +135,19 @@ model YearLevels {
 model Programs {
   id        String   @id @default(cuid())
   name      String
-  code      String
+  code      String   @unique
   isArchive Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   student Students[]
   section Sections[]
+  grades  Grades[]
 }
 
 model Sections {
   id        String   @id @default(cuid())
-  name      String
+  name      String   @unique
   isArchive Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -157,12 +161,13 @@ model Sections {
   student             Students[]
   assignTeacher       AssignTeacher[]
   assignCourseTeacher AssignCourseTeacher[]
+  grades              Grades[]
 }
 
 model Courses {
   id           String   @id @default(cuid())
   name         String
-  code         String
+  code         String   @unique
   unit         Int
   prerequisite String?
   isArchive    Boolean  @default(false)
@@ -170,6 +175,7 @@ model Courses {
   updatedAt    DateTime @updatedAt
 
   assignCourseTeacher AssignCourseTeacher[]
+  grades              Grades[]
 }
 
 model Semester {
@@ -194,4 +200,76 @@ model Logs {
   action    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Period {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Grades {
+  id                 String   @id @default(cuid())
+  studentNumber      String   @unique
+  student            Students @relation(fields: [studentNumber], references: [studentNumber])
+  courseCode         String
+  course             Courses  @relation(fields: [courseCode], references: [code])
+  programCode        String
+  programs           Programs @relation(fields: [programCode], references: [code])
+  sectionName        String
+  section            Sections @relation(fields: [sectionName], references: [name])
+  period             String
+  grade              Float
+  remarks            String
+  teacherSigned      Boolean  @default(true)
+  programChairSigned Boolean  @default(false)
+  deanSigned         Boolean  @default(false)
+  registrarSigned    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UploadedEcr {
+  id        String @id @default(cuid())
+  teacherId String
+  name      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Support {
+  id         String @id @default(cuid())
+  email      String
+  name       String
+  concerns   String
+  attachment String
+  status     String @default("Pending")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  name      String
+  feedback  String
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DocumentRequest {
+  id           String @id @default(cuid())
+  typeDocument String
+  purpose      String
+  status       String @default("Pending")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentNumber String
+  student       Students @relation(fields: [studentNumber], references: [studentNumber])
 }
