@@ -62,6 +62,8 @@ model Students {
 
   grades          Grades[]
   documentRequest DocumentRequest[]
+  consultation    Consultation[]
+  advising        Advising[]
 }
 
 model Teachers {
@@ -93,6 +95,8 @@ model Teachers {
 
   asssignTeacher      AssignTeacher[]
   assignCourseTeacher AssignCourseTeacher[]
+  consultation        Consultation[]
+  advising            Advising[]
 }
 
 model AssignTeacher {
@@ -176,6 +180,8 @@ model Courses {
 
   assignCourseTeacher AssignCourseTeacher[]
   grades              Grades[]
+  consultation        Consultation[]
+  advising            Advising[]
 }
 
 model Semester {
@@ -211,7 +217,7 @@ model Period {
 
 model Grades {
   id                 String   @id @default(cuid())
-  studentNumber      String   @unique
+  studentNumber      String
   student            Students @relation(fields: [studentNumber], references: [studentNumber])
   courseCode         String
   course             Courses  @relation(fields: [courseCode], references: [code])
@@ -272,4 +278,40 @@ model DocumentRequest {
 
   studentNumber String
   student       Students @relation(fields: [studentNumber], references: [studentNumber])
+}
+
+model Consultation {
+  id      String @id @default(cuid())
+  concern String
+  comment String
+  status  String @default("Pending")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherId String
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
+
+  studentNumber String
+  student       Students @relation(fields: [studentNumber], references: [studentNumber])
+
+  courseId String
+  course   Courses @relation(fields: [courseId], references: [id])
+}
+
+model Advising {
+  id String @id @default(cuid())
+  message String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentNumber String
+  student       Students @relation(fields: [studentNumber], references: [studentNumber])
+
+  teacherId String
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
+
+  courseId String
+  course   Courses @relation(fields: [courseId], references: [id])
 }
