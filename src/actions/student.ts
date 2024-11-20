@@ -123,13 +123,13 @@ export const createBulkStudents = async (data: any[]) => {
       lastName: String(student.lastName),
       extensionName: student.extensionName
         ? String(student.extensionName)
-        : "Unknown",
+        : "",
       birthDate: parseDateFromExcelNumber(student.birthDate),
       age: String(student.age),
       gender: String(student.gender),
       maritalStatus: student.civilStatus
         ? String(student.civilStatus)
-        : "Unknown", // Map to maritalStatus
+        : "", // Map to maritalStatus
       phoneNumber: String(student.phoneNumber),
       region: String(student.region),
       province: String(student.province),
@@ -143,7 +143,7 @@ export const createBulkStudents = async (data: any[]) => {
       highSchool: String(student.highSchool),
       yearLevel: student.yearLevelId
         ? String(student.yearLevelId)
-        : "defaultYearLevel", // Map to yearLevel
+        : "",
       program: student.programId ? String(student.programId) : "",
       section: student.sectionId ? String(student.sectionId) : "",
       profileImage: student.profileImage ? String(student.profileImage) : "",

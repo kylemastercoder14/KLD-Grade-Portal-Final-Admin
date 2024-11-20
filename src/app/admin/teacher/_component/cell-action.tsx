@@ -14,9 +14,9 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useDeleteSemester } from "@/data/semester";
 import { TeacherColumn } from "./column";
 import { useRouter } from "next/navigation";
+import { useArchiveTeacher } from "@/data/teacher";
 
 interface CellActionProps {
   data: TeacherColumn;
@@ -31,16 +31,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteSemester, isPending: isDeleting } = useDeleteSemester();
+  const { mutate: archiveTeacher, isPending: isDeleting } = useArchiveTeacher();
 
   const onDelete = async () => {
-    deleteSemester(data.id, {
+    archiveTeacher(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
       },
     });
   };
-
 
   return (
     <>
@@ -59,7 +59,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => router.push(`/admin/teacher/${data.id}`)}>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/teacher/${data.id}`)}
+          >
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>
