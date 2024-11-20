@@ -286,10 +286,10 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
             fieldType={FormFieldType.SELECT}
             control={form.control}
             options={[
-              "Dean",
+              "Professor",
+              "Program Chair",
               "Associate Dean",
-              "Professor I",
-              "Assistant Professor",
+              "Dean",
             ]}
             disabled={isLoading}
           />
