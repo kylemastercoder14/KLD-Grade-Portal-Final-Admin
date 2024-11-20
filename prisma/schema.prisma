@@ -23,27 +23,30 @@ model Admin {
 }
 
 model Students {
-  id            String  @id @default(cuid())
-  studentNumber String  @unique
-  firstName     String
-  middleName    String?
-  lastName      String
-  extensionName String?
-  birthDate     String
-  age           String
-  gender        String
-  civilStatus   String
-  phoneNumber   String
-  region        String
-  province      String
-  city          String
-  barangay      String
-  houseNumber   String
-  zipCode       String
-  email         String
-  password      String
-  profileImage  String?
-  isArchive     Boolean @default(false)
+  id             String  @id @default(cuid())
+  studentNumber  String  @unique
+  firstName      String
+  middleName     String?
+  lastName       String
+  extensionName  String?
+  birthDate      String
+  age            String
+  gender         String
+  civilStatus    String
+  phoneNumber    String
+  region         String
+  province       String
+  city           String
+  barangay       String
+  houseNumber    String
+  zipCode        String
+  email          String
+  password       String
+  profileImage   String?
+  isArchive      Boolean @default(false)
+  isAuthenticate Boolean @default(false)
+  otpSecret      String?
+  otpQrCode      String?
 
   elementarySchool String
   highSchool       String
@@ -300,9 +303,9 @@ model Consultation {
 }
 
 model Advising {
-  id String @id @default(cuid())
+  id      String @id @default(cuid())
   message String
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
