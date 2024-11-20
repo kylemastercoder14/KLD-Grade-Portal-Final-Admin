@@ -10,6 +10,8 @@ import MoreButton from "@/components/globals/more-button";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import { createBulkStudents } from "@/actions/student";
+import { createBulkTeachers } from "@/actions/teacher";
+import { Loader2 } from "lucide-react";
 
 const TableHeader = ({
   label,
@@ -22,6 +24,7 @@ const TableHeader = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +38,7 @@ const TableHeader = ({
   const previewAndSaveData = async (file: File) => {
     if (file) {
       toast.info("Processing file, please wait...");
+      setLoading(true);
       const reader = new FileReader();
       reader.onload = async (e) => {
         const data = e.target?.result;
@@ -44,7 +48,7 @@ const TableHeader = ({
           const workSheet = workbook.Sheets[sheetName];
           const json = XLSX.utils.sheet_to_json(workSheet);
           try {
-            const response = await createBulkStudents(json);
+            const response = await createBulkTeachers(json);
             if (response?.error) {
               toast.error(response.error);
             } else {
@@ -54,56 +58,61 @@ const TableHeader = ({
             console.error("Error processing file:", error);
             toast.error("Failed to process data. Please try again.");
           }
+          setLoading(false);
         }
       };
       reader.readAsBinaryString(file);
     }
   };
-
   return (
-    <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 gap-2 md:justify-between">
-      <div>
-        <p className="text-xl font-bold">Teacher Record</p>
-        <p className="text-sm text-muted-foreground">
-          A comprehensive list of all teachers, including their contact information, and status. Manage and review individual
-          teacher records efficiently.
-        </p>
-      </div>
-      <div className="flex items-center gap-2">
-        <div>
-          <input
-            className="hidden"
-            id="file_input"
-            type="file"
-            ref={fileInputRef}
-            accept=".xls,.xlsx"
-            onChange={handleFileChange}
-          />
-          <Button
-            onClick={() => {
-              fileInputRef.current?.click();
-            }}
-            variant="secondary"
-            className="h-7 gap-1"
-            size="sm"
-          >
-            <IconFileExcel className="w-4 h-4" />
-            Import from Excel
-          </Button>
+    <>
+      {loading ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <div className="flex md:items-center md:flex-row flex-col mb-5 mt-5 gap-2 md:justify-between">
+          <div>
+            <p className="text-xl font-bold">Teacher Record</p>
+            <p className="text-sm text-muted-foreground">
+              A comprehensive list of all teachers, including their contact
+              information, and status. Manage and review individual teacher
+              records efficiently.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div>
+              <input
+                className="hidden"
+                id="file_input"
+                type="file"
+                ref={fileInputRef}
+                accept=".xls,.xlsx"
+                onChange={handleFileChange}
+              />
+              <Button
+                onClick={() => {
+                  fileInputRef.current?.click();
+                }}
+                variant="secondary"
+                className="h-7 gap-1"
+                size="sm"
+              >
+                <IconFileExcel className="w-4 h-4" />
+                Import from Excel
+              </Button>
+            </div>
+            <MoreButton tableRef={tableRef} />
+            <Button
+              onClick={() => href && router.push(href)}
+              size="sm"
+              className="h-7 gap-1"
+            >
+              <IconCirclePlus className="h-3.5 w-3.5" />
+              <span>{label}</span>
+            </Button>
+          </div>
         </div>
-        <MoreButton tableRef={tableRef} />
-        <Button
-          onClick={() => href && router.push(href)}
-          size="sm"
-          className="h-7 gap-1"
-        >
-          <IconCirclePlus className="h-3.5 w-3.5" />
-          <span>
-            {label}
-          </span>
-        </Button>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

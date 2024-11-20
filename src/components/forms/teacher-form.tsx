@@ -39,12 +39,13 @@ const TeacherForm = ({
       ? {
           ...initialData,
           middleName: initialData?.middleName ?? "",
+          employeeNumber: initialData?.employeeId ?? "",
           extensionName: initialData?.extensionName ?? "",
           profileImage: initialData?.profileImage ?? "",
           maritalStatus: initialData?.civilStatus ?? "",
           municipality: initialData?.city ?? "",
           barangay: initialData?.barangay ?? "",
-          department: initialData?.programId ?? "",
+          programId: initialData?.programId ?? "",
         }
       : {
           employeeNumber: "",
@@ -67,7 +68,7 @@ const TeacherForm = ({
           password: "12345678",
           profileImage: "",
           position: "",
-          department: "",
+          programId: "",
         },
   });
 
@@ -309,7 +310,7 @@ const TeacherForm = ({
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
             <CustomFormField
               label="Program"
-              name="department"
+              name="programId"
               placeholder="Select your program"
               isRequired
               fieldType={FormFieldType.SELECT}

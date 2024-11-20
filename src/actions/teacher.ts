@@ -10,7 +10,7 @@ export const getAllTeachers = async () => {
   try {
     const data = await db.teachers.findMany({
       orderBy: {
-        createdAt: "asc",
+        employeeId: "asc",
       },
     });
 
@@ -56,8 +56,10 @@ export const createTeacher = async (
     position,
     zipCode,
     profileImage,
-    department,
+    programId,
   } = validatedField.data;
+
+  console.log("Inserting Teacher", values);
 
   const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -84,10 +86,11 @@ export const createTeacher = async (
         zipCode,
         profileImage,
         position,
-        programId: department,
+        programId,
       },
     });
 
+    console.log("Teacher inserted:", teacher);
     return { success: "Teacher created successfully", teacher };
   } catch (error: any) {
     return {
@@ -98,43 +101,90 @@ export const createTeacher = async (
   }
 };
 
-const parseDateFromExcelNumber = (excelDate: number): string => {
-  const jsDate = new Date((excelDate - 25569) * 86400 * 1000); // Convert Excel date to JS date
-  return jsDate.toISOString().split("T")[0]; // Return in 'YYYY-MM-DD' format
+const parseDateFromExcelNumber = (excelDate: number | string): string => {
+  // Check if the input is already in valid date format (YYYY-MM-DD)
+  if (typeof excelDate === "string" && !isNaN(Date.parse(excelDate))) {
+    return new Date(excelDate).toISOString().split("T")[0];
+  }
+
+  // If the input is an Excel serial number, convert it to a date
+  const excelNumber = Number(excelDate);
+  if (isNaN(excelNumber) || excelNumber < 1) {
+    throw new Error(`Invalid Excel date: ${excelDate}`);
+  }
+
+  const jsDate = new Date((excelNumber - 25569) * 86400 * 1000); // Convert Excel date to JS date
+  return jsDate.toISOString().split("T")[0];
+};
+
+const calculateAge = (birthDate: Date): number => {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
 };
 
 export const createBulkTeachers = async (data: any[]) => {
   try {
-    const processedData = data.map((teacher) => ({
-      employeeNumber: String(teacher.employeeNumber),
-      firstName: String(teacher.firstName),
-      middleName: teacher.middleName ? String(teacher.middleName) : "",
-      lastName: String(teacher.lastName),
-      extensionName: teacher.extensionName
-        ? String(teacher.extensionName)
-        : "Unknown",
-      birthDate: parseDateFromExcelNumber(teacher.birthDate),
-      age: String(teacher.age),
-      gender: String(teacher.gender),
-      maritalStatus: teacher.civilStatus
-        ? String(teacher.civilStatus)
-        : "Unknown", // Map to maritalStatus
-      phoneNumber: String(teacher.phoneNumber),
-      region: String(teacher.region),
-      province: String(teacher.province),
-      municipality: teacher.city ? String(teacher.city) : "",
-      barangay: String(teacher.barangay),
-      houseNumber: String(teacher.houseNumber),
-      zipCode: String(teacher.zipCode),
-      email: String(teacher.email),
-      password: String(teacher.password),
-      profileImage: teacher.profileImage ? String(teacher.profileImage) : "",
-      position: teacher.position ? String(teacher.position) : "",
-      department: teacher.department ? String(teacher.department) : "",
-    }));
+    // Fetch the latest employee number from the database
+    const latestTeacher = await db.teachers.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: { employeeId: true },
+    });
 
-    await Promise.all(processedData.map((teacher) => createTeacher(teacher)));
+    const lastNumber = latestTeacher?.employeeId
+      ? parseInt(latestTeacher.employeeId.split("-").pop() || "0", 10)
+      : 0;
 
+    const processedData = data.map((teacher, index) => {
+      const birthDate = parseDateFromExcelNumber(teacher.birthDate);
+
+      const age = birthDate
+        ? calculateAge(new Date(birthDate)).toString()
+        : "Unknown";
+      const newNumber = (lastNumber + index + 1).toString().padStart(3, "0"); // Increment and format
+      const employeeNumber = `KLD-EMP-${newNumber}`;
+
+      return {
+        employeeNumber,
+        firstName: String(teacher.firstName),
+        middleName: teacher.middleName ? String(teacher.middleName) : "",
+        lastName: String(teacher.lastName),
+        extensionName: teacher.extensionName
+          ? String(teacher.extensionName)
+          : "",
+        birthDate: birthDate || "",
+        age,
+        gender: String(teacher.gender),
+        maritalStatus: teacher.civilStatus
+          ? String(teacher.civilStatus)
+          : "", // Map to maritalStatus
+        phoneNumber: String(teacher.phoneNumber),
+        region: String(teacher.region),
+        province: String(teacher.province),
+        municipality: teacher.city ? String(teacher.city) : "",
+        barangay: String(teacher.barangay),
+        houseNumber: String(teacher.houseNumber),
+        zipCode: String(teacher.zipCode),
+        email: String(teacher.email),
+        password: String(teacher.password),
+        profileImage: teacher.profileImage ? String(teacher.profileImage) : "",
+        position: "Instructor",
+        programId: teacher.programId ? String(teacher.programId) : "",
+      };
+    });
+
+    console.log("Processed bulk data:", processedData);
+
+    const results = await Promise.all(processedData.map((teacher) => createTeacher(teacher)));
+
+    console.log("Bulk insert results:", results);
     return { success: "Teachers created successfully" };
   } catch (error) {
     console.error("Error creating teachers:", error);
@@ -177,7 +227,7 @@ export const updateTeacher = async (
     position,
     zipCode,
     profileImage,
-    department,
+    programId,
   } = validatedField.data;
 
   try {
@@ -202,7 +252,7 @@ export const updateTeacher = async (
         zipCode,
         profileImage,
         position,
-        programId: department,
+        programId,
       },
       where: {
         id: teacherId,
