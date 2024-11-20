@@ -31,7 +31,7 @@ const TeacherClient = () => {
       position: item.position,
       email: item.email,
       imageUrl: item.profileImage ?? "",
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
 
   if (!isMounted) {

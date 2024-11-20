@@ -56,6 +56,7 @@ export const createTeacher = async (
     position,
     zipCode,
     profileImage,
+    department,
   } = validatedField.data;
 
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -82,7 +83,8 @@ export const createTeacher = async (
         region,
         zipCode,
         profileImage,
-        position
+        position,
+        programId: department,
       },
     });
 
@@ -128,11 +130,10 @@ export const createBulkTeachers = async (data: any[]) => {
       password: String(teacher.password),
       profileImage: teacher.profileImage ? String(teacher.profileImage) : "",
       position: teacher.position ? String(teacher.position) : "",
+      department: teacher.department ? String(teacher.department) : "",
     }));
 
-    await Promise.all(
-      processedData.map((teacher) => createTeacher(teacher))
-    );
+    await Promise.all(processedData.map((teacher) => createTeacher(teacher)));
 
     return { success: "Teachers created successfully" };
   } catch (error) {
@@ -176,6 +177,7 @@ export const updateTeacher = async (
     position,
     zipCode,
     profileImage,
+    department,
   } = validatedField.data;
 
   try {
@@ -199,7 +201,8 @@ export const updateTeacher = async (
         region,
         zipCode,
         profileImage,
-        position
+        position,
+        programId: department,
       },
       where: {
         id: teacherId,

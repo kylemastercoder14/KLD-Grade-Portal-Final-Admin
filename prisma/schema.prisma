@@ -96,6 +96,9 @@ model Teachers {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  programId String
+  programs  Programs @relation(fields: [programId], references: [id])
+
   asssignTeacher      AssignTeacher[]
   assignCourseTeacher AssignCourseTeacher[]
   consultation        Consultation[]
@@ -147,9 +150,10 @@ model Programs {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  student Students[]
-  section Sections[]
-  grades  Grades[]
+  student  Students[]
+  section  Sections[]
+  grades   Grades[]
+  teachers Teachers[]
 }
 
 model Sections {

@@ -2,7 +2,7 @@
 
 import { useAddressData } from "@/functions/address-selection";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Teachers } from "@prisma/client";
+import { Programs, Teachers } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +16,13 @@ import { Loader2 } from "lucide-react";
 import { TeacherValidator } from "@/functions/validators/teacher";
 import { useSaveTeacher } from "@/data/teacher";
 
-const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
+const TeacherForm = ({
+  initialData,
+  departments,
+}: {
+  initialData: Teachers | null;
+  departments: Programs[];
+}) => {
   const router = useRouter();
   const title = initialData
     ? "Edit Teacher Information"
@@ -38,6 +44,7 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
           maritalStatus: initialData?.civilStatus ?? "",
           municipality: initialData?.city ?? "",
           barangay: initialData?.barangay ?? "",
+          department: initialData?.programId ?? "",
         }
       : {
           employeeNumber: "",
@@ -60,6 +67,7 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
           password: "12345678",
           profileImage: "",
           position: "",
+          department: "",
         },
   });
 
@@ -86,6 +94,26 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
     selectedProvinceName,
     selectedMunicipalityName
   );
+
+  const positions = [
+    "Dean",
+    "Associate Dean",
+    "Program Director (Information System)",
+    "Program Director (Computer Science)",
+    "Program Director (Data Science)",
+    "Program Director (Psychology)",
+    "Director for Center Knowledge Management",
+    "Head, Data Privacy ",
+    "Head, Integrated Humanities and Social Sciences",
+    "Head, National Service Training Program",
+    "Head, Clinical Research",
+    "Year Level 1 Program Chair",
+    "Year Level 2 Program Chair",
+    "Health Education Subject Lead",
+    "Health Assessment Subject Lead",
+    "Instructor",
+    "Institute Clerk",
+  ];
   return (
     <Form {...form}>
       <Heading title={title} description={description} />
@@ -278,23 +306,40 @@ const TeacherForm = ({ initialData }: { initialData: Teachers | null }) => {
               disabled={isLoading}
             />
           </div>
-          <CustomFormField
-            label="Position"
-            name="position"
-            placeholder="Select your position"
-            isRequired
-            fieldType={FormFieldType.SELECT}
-            control={form.control}
-            options={[
-              "Professor",
-              "Program Chair",
-              "Associate Dean",
-              "Dean",
-            ]}
-            disabled={isLoading}
-          />
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Program"
+              name="department"
+              placeholder="Select your program"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              dynamicOptions={departments.map((option) => ({
+                label: option.name,
+                value: option.id,
+              }))}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Position"
+              name="position"
+              placeholder="Select your position"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              dynamicOptions={positions.map((position) => ({
+                label: position,
+                value: position,
+              }))}
+              disabled={isLoading}
+            />
+          </div>
         </div>
-        <Button type="submit" className="mt-3 md:w-auto w-full" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="mt-3 md:w-auto w-full"
+          disabled={isLoading}
+        >
           {isLoading && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
           {action}
         </Button>

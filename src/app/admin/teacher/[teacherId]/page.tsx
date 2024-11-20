@@ -7,11 +7,16 @@ const TeacherPage = async ({ params }: { params: { teacherId: string } }) => {
     where: {
       id: params.teacherId,
     },
+    include: {
+      programs: true,
+    },
   });
+
+  const departments = await db.programs.findMany();
 
   return (
     <div className="flex-1 space-y-4">
-      <TeacherForm initialData={teachers} />
+      <TeacherForm departments={departments} initialData={teachers} />
     </div>
   );
 };

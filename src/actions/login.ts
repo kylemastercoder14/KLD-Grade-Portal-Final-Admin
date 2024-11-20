@@ -38,17 +38,12 @@ export const loginAdmin = async (username: string, password: string) => {
     const admin = await db.admin.findFirst({
       where: {
         username,
+        password
       },
     });
 
     if (!admin) {
       return { error: "Admin not found" };
-    }
-
-    const validPassword = await bcryptjs.compare(password, admin.password);
-
-    if (!validPassword) {
-      return { error: "Invalid password" };
     }
 
     // Create JWT token
