@@ -26,7 +26,7 @@ const CourseClient = () => {
   const formattedData: CourseColumn[] =
     courseData?.data?.map((item) => ({
       id: item.id,
-      name: item.name,
+      name: item.name.toUpperCase(),
       code: item.code,
       unit: item.unit,
       preRequisite: item.prerequisite || "N/A",

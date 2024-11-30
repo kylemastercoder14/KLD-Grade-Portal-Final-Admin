@@ -35,8 +35,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onDelete = async () => {
     deleteCourse(data.id, {
-      onSuccess: () => {
-        setOpen(false);
+      onSuccess: (data) => {
+        if (data.success) {
+          setOpen(false);
+        } else {
+          toast.error(data.error);
+        }
       },
     });
   };

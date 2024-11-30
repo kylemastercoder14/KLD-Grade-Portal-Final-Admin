@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { createCourse, deleteCourse, getAllCourses, updateCourse } from "@/actions/courses";
+import {
+  createCourse,
+  deleteCourse,
+  getAllCourses,
+  updateCourse,
+} from "@/actions/courses";
 import { CourseValidators } from "@/functions/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -49,6 +54,8 @@ export function useDeleteCourse() {
       if (data?.success) {
         toast.success(data.success);
         queryClient.invalidateQueries({ queryKey: ["courses"] });
+      } else {
+        toast.error(data.error);
       }
     },
     onError: (error: any) => {

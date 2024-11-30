@@ -30,6 +30,9 @@ export const columns: ColumnDef<CourseColumn>[] = [
         </span>
       );
     },
+    cell: ({row}) => (
+      <span>{row.original.name}</span>
+    )
   },
   {
     accessorKey: "code",
