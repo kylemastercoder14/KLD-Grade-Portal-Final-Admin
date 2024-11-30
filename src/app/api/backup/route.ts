@@ -1,4 +1,4 @@
-// @typescript-eslint/no-explicit-any
+
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
 import path from "path";
@@ -34,8 +34,8 @@ export async function POST() {
     });
 
     return new NextResponse("Backup request received", { status: 200 });
-  } catch (error: any) {
-    console.error("Unexpected error:", error.message);
+  } catch (error) {
+    console.error("Unexpected error:", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
