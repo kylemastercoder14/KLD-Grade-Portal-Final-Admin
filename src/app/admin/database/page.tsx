@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { upload } from "@/lib/upload";
 
 const Database = () => {
   const [isLoading, setIsLoading] = useState(false);
