@@ -322,3 +322,10 @@ model Advising {
   courseId String
   course   Courses @relation(fields: [courseId], references: [id])
 }
+
+model Database {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

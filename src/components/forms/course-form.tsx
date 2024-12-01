@@ -18,9 +18,11 @@ import { toast } from "sonner";
 const CourseForm = ({
   initialData,
   onClose,
+  isOpen
 }: {
   initialData: any;
   onClose: () => void;
+  isOpen: boolean;
 }) => {
   const { data: courseData, error } = useGetCourses();
   const title = initialData ? "Edit Course" : "Add Course";
@@ -34,6 +36,7 @@ const CourseForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          preRequisite: initialData.preRequisiteId,
         }
       : {
           name: "",
@@ -69,7 +72,7 @@ const CourseForm = ({
   return (
     <>
       <Modal
-        isOpen={true}
+        isOpen={isOpen}
         onClose={onClose}
         title={title}
         description={description}

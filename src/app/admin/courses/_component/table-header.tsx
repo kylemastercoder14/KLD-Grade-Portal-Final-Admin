@@ -1,25 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { RefObject, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { IconCirclePlus, IconFileExcel } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import CourseForm from "@/components/forms/course-form";
-import MoreButton from "@/components/globals/more-button";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { createBulkCourses } from "@/actions/courses";
+import MoreButton from "./more-button";
 
-const TableHeader = ({
-  label,
-  href,
-  tableRef,
-}: {
-  label: string;
-  href?: string;
-  tableRef: RefObject<HTMLTableElement>;
-}) => {
+const TableHeader = ({ label, href }: { label: string; href?: string }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [openCourseModal, setOpenCourseModal] = useState(false);
   const router = useRouter();
@@ -86,20 +78,19 @@ const TableHeader = ({
             Import from Excel
           </Button>
         </div>
-        <MoreButton tableRef={tableRef} />
+        <MoreButton />
         <Button
           onClick={() => (href ? router.push(href) : setOpenCourseModal(true))}
           size="sm"
           className="h-7 gap-1"
         >
           <IconCirclePlus className="h-3.5 w-3.5" />
-          <span>
-            {label}
-          </span>
+          <span>{label}</span>
         </Button>
       </div>
       {openCourseModal && (
         <CourseForm
+          isOpen={openCourseModal} // Open the modal
           initialData={null} // Pass any initial data for form, if any
           onClose={() => setOpenCourseModal(false)} // Close the modal when done
         />

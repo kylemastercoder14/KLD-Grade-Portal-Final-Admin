@@ -61,6 +61,16 @@ export const createSection = async (
   }
 };
 
+export const createBulkSections = async (data: any[]) => {
+  try {
+    for (const section of data) {
+      await createSection(section);
+    }
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
 // UPDATE SECTION IN THE DATABASE
 export const updateSection = async (
   values: z.infer<typeof SectionValidators>,

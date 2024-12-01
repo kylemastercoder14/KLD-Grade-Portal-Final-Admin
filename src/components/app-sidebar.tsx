@@ -80,10 +80,6 @@ const data = {
           url: "/admin/assign-course-teacher",
         },
         {
-          title: "Semesters",
-          url: "/admin/semesters",
-        },
-        {
           title: "Announcements",
           url: "/admin/announcements",
         },

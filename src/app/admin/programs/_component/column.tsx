@@ -4,6 +4,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import { ChevronsUpDown } from "lucide-react";
 
 export type ProgramColumn = {
   id: string;
@@ -17,23 +18,73 @@ export type ProgramColumn = {
 export const columns: ColumnDef<ProgramColumn>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <span
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="cursor-pointer flex items-center"
+        >
+          Name
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "code",
-    header: "Code",
+    header: ({ column }) => {
+      return (
+        <span
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="cursor-pointer flex items-center"
+        >
+          Code
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "students",
-    header: "Students",
+    header: ({ column }) => {
+      return (
+        <span
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="cursor-pointer flex items-center"
+        >
+          Students
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "sections",
-    header: "Sections",
+    header: ({ column }) => {
+      return (
+        <span
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="cursor-pointer flex items-center"
+        >
+          Sections
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
-    header: "Date Created",
+    header: ({ column }) => {
+      return (
+        <span
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="cursor-pointer flex items-center"
+        >
+          Date Created
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     id: "actions",

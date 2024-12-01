@@ -13,6 +13,7 @@ export type CourseColumn = {
   code: string;
   unit: number;
   preRequisite: string;
+  preRequisiteId: string;
   createdAt: string;
 };
 

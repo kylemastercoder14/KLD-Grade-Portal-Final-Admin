@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -10,7 +10,6 @@ import { format } from "date-fns";
 import TableHeader from "./table-header";
 
 const YearLevelClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: yearLevelData, error, isLoading } = useGetYearLevel();
 
@@ -39,15 +38,13 @@ const YearLevelClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Add Year Level" />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader label="Add Year Level" />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

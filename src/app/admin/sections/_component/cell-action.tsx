@@ -15,9 +15,10 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useDeleteProgram, useGetProgram } from "@/data/programs";
+import { useGetProgram } from "@/data/programs";
 import SectionForm from "@/components/forms/section-form";
 import { useGetYearLevel } from "@/data/year-level";
+import { useDeleteSection } from "@/data/sections";
 
 interface CellActionProps {
   data: SectionColumn;
@@ -42,12 +43,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     }
   }, [programError, yearLevelError]);
 
-  const { mutate: deleteProgram, isPending: isDeleting } = useDeleteProgram();
+  const { mutate: deleteSection, isPending: isDeleting } = useDeleteSection();
 
   const onDelete = async () => {
-    deleteProgram(data.id, {
+    deleteSection(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
       },
     });
   };

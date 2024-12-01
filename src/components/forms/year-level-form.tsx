@@ -17,9 +17,11 @@ import { useSaveYearLevel } from "@/data/year-level";
 const YearLevelForm = ({
   initialData,
   onClose,
+  isOpen
 }: {
   initialData: any;
   onClose: () => void;
+  isOpen: boolean;
 }) => {
   const title = initialData ? "Edit Year Level" : "Add Year Level";
   const description = initialData
@@ -53,7 +55,7 @@ const YearLevelForm = ({
   return (
     <>
       <Modal
-        isOpen={true}
+        isOpen={isOpen}
         onClose={onClose}
         title={title}
         description={description}

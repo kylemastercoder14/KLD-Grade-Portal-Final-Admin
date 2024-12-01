@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns, CourseColumn } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -9,7 +9,6 @@ import { useGetCourses } from "@/data/courses";
 import TableHeader from "./table-header";
 
 const CourseClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: courseData, error, isLoading } = useGetCourses();
 
@@ -24,14 +23,21 @@ const CourseClient = () => {
   }, [error]);
 
   const formattedData: CourseColumn[] =
-    courseData?.data?.map((item) => ({
-      id: item.id,
-      name: item.name.toUpperCase(),
-      code: item.code,
-      unit: item.unit,
-      preRequisite: item.prerequisite || "N/A",
-      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
-    })) || [];
+    courseData?.data?.map((item) => {
+      const preRequisite = courseData?.data?.find(
+        (course) => course.id === item.prerequisite
+      );
+
+      return {
+        id: item.id,
+        name: item.name.toUpperCase(),
+        code: item.code,
+        unit: item.unit,
+        preRequisite: preRequisite ? preRequisite.name : "N/A",
+        preRequisiteId: item.prerequisite || "N/A",
+        createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
+      };
+    }) || [];
 
   if (!isMounted) {
     return null;
@@ -39,15 +45,13 @@ const CourseClient = () => {
 
   return (
     <div>
-      <TableHeader label="Add Course" tableRef={tableRef}  />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader label="Add Course" />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

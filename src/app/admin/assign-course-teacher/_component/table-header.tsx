@@ -4,7 +4,7 @@ import React, { RefObject, useState } from "react";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import MoreButton from "@/components/globals/more-button";
+import MoreButton from "@/app/admin/year-level/_component/more-button";
 import { useGetTeacher } from "@/data/teacher";
 import { useGetSection } from "@/data/sections";
 import { toast } from "sonner";

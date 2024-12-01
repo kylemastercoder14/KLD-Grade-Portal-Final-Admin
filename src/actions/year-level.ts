@@ -64,6 +64,16 @@ export const createYearLevel = async (
   }
 };
 
+export const createBulkYearLevel = async (data: any[]) => {
+  try {
+    for (const yearLevel of data) {
+      await createYearLevel(yearLevel);
+    }
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
 // UPDATE YEAR LEVEL IN THE DATABASE
 export const updateYearLevel = async (
   values: z.infer<typeof YearLevelValidators>,

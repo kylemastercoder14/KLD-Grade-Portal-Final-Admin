@@ -69,6 +69,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       />
       {formOpen && (
         <ProgramForm
+          isOpen={formOpen}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
         />

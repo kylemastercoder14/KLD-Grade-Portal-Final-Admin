@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -10,7 +10,6 @@ import { useGetProgram } from "@/data/programs";
 import TableHeader from "./table-header";
 
 const ProgramClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: programData, error, isLoading } = useGetProgram();
 
@@ -40,15 +39,13 @@ const ProgramClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Add Program" />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader label="Add Program" />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

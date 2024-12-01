@@ -5,7 +5,7 @@ import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import SemesterForm from "@/components/forms/semester-form";
-import MoreButton from "@/components/globals/more-button";
+import MoreButton from "@/app/admin/year-level/_component/more-button";
 
 const TableHeader = ({
   label,
