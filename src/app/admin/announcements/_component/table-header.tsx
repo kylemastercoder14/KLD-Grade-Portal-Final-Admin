@@ -1,20 +1,17 @@
 "use client";
 
-import React, { RefObject, useState } from "react";
+import React, { useState } from "react";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import AnnouncementForm from "@/components/forms/announcement-form";
-import MoreButton from "@/components/globals/more-button";
 
 const TableHeader = ({
   label,
   href,
-  tableRef,
 }: {
   label: string;
   href?: string;
-  tableRef: RefObject<HTMLTableElement>;
 }) => {
   const [openAnnouncementModal, setOpenAnnouncementModal] = useState(false);
   const router = useRouter();
@@ -30,7 +27,7 @@ const TableHeader = ({
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <MoreButton tableRef={tableRef} />
+        {/* <MoreButton /> */}
         <Button
           onClick={() =>
             href ? router.push(href) : setOpenAnnouncementModal(true)

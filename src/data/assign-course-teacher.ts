@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createAssignCourseTeacher, deleteAssignCourseTeacher, getAllAssignCoursTeacher, updateAssignCourseTeacher } from "@/actions/assign-course-teacher";
+import { createAssignCourseTeacher, deleteAssignCourseTeacher, getAllAssignCourseTeacher, updateAssignCourseTeacher } from "@/actions/assign-course-teacher";
 import { AssignCourseTeacherValidator } from "@/functions/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export function useGetAssignCourseTeacher() {
   return useQuery({
-    queryFn: async () => getAllAssignCoursTeacher(),
+    queryFn: async () => getAllAssignCourseTeacher(),
     queryKey: ["assignCourseTeacher"],
   });
 }

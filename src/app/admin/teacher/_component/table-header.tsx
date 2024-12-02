@@ -6,7 +6,7 @@ import React, { RefObject, useRef, useState } from "react";
 import { IconCirclePlus, IconFileExcel } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import MoreButton from "@/components/globals/more-button";
+import MoreButton from "@/app/admin/year-level/_component/more-button";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import { createBulkStudents } from "@/actions/student";

@@ -1,17 +1,17 @@
 "use client";
 
-import React from "react";
-import { columns } from "./column";
+import React, { useRef } from "react";
+import { BackupDatabaseColumn, columns } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
-import { AnnouncementColumn } from "./column";
 import { format } from "date-fns";
-import { useGetAnnouncement } from "@/data/announcement";
 import TableHeader from "./table-header";
+import { useGetBackupDatabase } from "@/data/backup-database";
 
-const AnnouncementClient = () => {
+const BackupDatabaseClient = () => {
+  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
-  const { data: announcementData, error, isLoading } = useGetAnnouncement();
+  const { data: backupDatabaseData, error, isLoading } = useGetBackupDatabase();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -23,12 +23,11 @@ const AnnouncementClient = () => {
     }
   }, [error]);
 
-  const formattedData: AnnouncementColumn[] =
-    announcementData?.data?.map((item) => ({
+  const formattedData: BackupDatabaseColumn[] =
+    backupDatabaseData?.data?.map((item) => ({
       id: item.id,
       name: item.name,
-      description: item.description ?? "N/A",
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
 
   if (!isMounted) {
@@ -37,15 +36,17 @@ const AnnouncementClient = () => {
 
   return (
     <div>
-      <TableHeader label="Add Announcement" />
-      <DataTable
+      <TableHeader tableRef={tableRef} label="Backup Database" />
+      <div ref={tableRef}>
+        <DataTable
           loading={isLoading}
           searchKey="name"
           columns={columns}
           data={formattedData}
         />
+      </div>
     </div>
   );
 };
 
-export default AnnouncementClient;
+export default BackupDatabaseClient;

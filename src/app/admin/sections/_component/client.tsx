@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns, SectionColumn } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -9,7 +9,6 @@ import { useGetSection } from "@/data/sections";
 import TableHeader from "./table-header";
 
 const SectionClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: sectionData, error, isLoading } = useGetSection();
 
@@ -41,15 +40,13 @@ const SectionClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Add Section" />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader label="Add Section" />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

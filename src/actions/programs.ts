@@ -9,7 +9,7 @@ export const getAllPrograms = async () => {
   try {
     const data = await db.programs.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       include: {
         student: true,
@@ -45,7 +45,7 @@ export const createProgram = async (
     const program = await db.programs.create({
       data: {
         name,
-        code
+        code,
       },
     });
 
@@ -56,6 +56,16 @@ export const createProgram = async (
         error.message || ""
       }`,
     };
+  }
+};
+
+export const createBulkPrograms = async (data: any[]) => {
+  try {
+    for (const program of data) {
+      await createProgram(program);
+    }
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
   }
 };
 
@@ -84,7 +94,7 @@ export const updateProgram = async (
       },
       data: {
         name,
-        code
+        code,
       },
     });
 
@@ -114,8 +124,9 @@ export const deleteProgram = async (programId: string) => {
     return { success: "Program deleted successfully", program };
   } catch (error: any) {
     return {
-      error: `Failed to delete program. Please try again. ${error.message || ""}`,
+      error: `Failed to delete program. Please try again. ${
+        error.message || ""
+      }`,
     };
   }
 };
-

@@ -71,6 +71,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       />
       {formOpen && (
         <YearLevelForm
+          isOpen={formOpen}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
         />

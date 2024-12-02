@@ -14,9 +14,9 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import AlertModal from "@/components/ui/alert-modal";
 import { useDeleteCourse } from "@/data/courses";
 import CourseForm from "@/components/forms/course-form";
+import PasskeyModal from "@/components/globals/passkey-modal";
 
 interface CellActionProps {
   data: CourseColumn;
@@ -25,6 +25,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [otp, setOtp] = useState("");
   const [initialData, setInitialData] = useState<CourseColumn | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
@@ -34,10 +35,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { mutate: deleteCourse, isPending: isDeleting } = useDeleteCourse();
 
   const onDelete = async () => {
+    if (otp !== "111111") {
+      toast.error("Invalid passkey");
+      return;
+    }
     deleteCourse(data.id, {
       onSuccess: (data) => {
         if (data.success) {
           setOpen(false);
+          window.location.reload();
         } else {
           toast.error(data.error);
         }
@@ -52,14 +58,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <PasskeyModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.reload();
+          toast.success("Delete cancelled");
+        }}
         loading={isDeleting}
         onConfirm={onDelete}
+        title="Delete Courses"
+        description="Are you sure you want to delete this course? This action cannot be undone."
+        setOtp={setOtp}
       />
       {formOpen && (
         <CourseForm
+          isOpen={formOpen}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
         />

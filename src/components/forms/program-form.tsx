@@ -17,9 +17,11 @@ import { useSaveProgram } from "@/data/programs";
 const ProgramForm = ({
   initialData,
   onClose,
+  isOpen,
 }: {
   initialData: any;
   onClose: () => void;
+  isOpen: boolean;
 }) => {
   const title = initialData ? "Edit Program" : "Add Program";
   const description = initialData
@@ -54,7 +56,7 @@ const ProgramForm = ({
   return (
     <>
       <Modal
-        isOpen={true}
+        isOpen={isOpen}
         onClose={onClose}
         title={title}
         description={description}
