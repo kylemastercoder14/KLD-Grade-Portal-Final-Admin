@@ -7,7 +7,7 @@ import {
 import React from "react";
 import GreetingsHeader from "@/components/globals/greetings-header";
 import AssignCourseTeacherClient from "./_component/client";
-import { getAllAssignCoursTeacher } from "@/actions/assign-course-teacher";
+import { getAllAssignCourseTeacher } from "@/actions/assign-course-teacher";
 
 const AssignCourseTeacher = async () => {
   const queryClient = new QueryClient();
@@ -15,7 +15,7 @@ const AssignCourseTeacher = async () => {
   // Prefetch the data from the server
   await queryClient.prefetchQuery({
     queryKey: ["assignCourseTeacher"],
-    queryFn: getAllAssignCoursTeacher,
+    queryFn: getAllAssignCourseTeacher,
   });
 
   // Hydrate the query data for the client

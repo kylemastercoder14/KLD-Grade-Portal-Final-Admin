@@ -1,24 +1,22 @@
 "use client";
 
-import React, { RefObject, useState } from "react";
+import React, { useState } from "react";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import MoreButton from "@/app/admin/year-level/_component/more-button";
 import { useGetTeacher } from "@/data/teacher";
 import { useGetSection } from "@/data/sections";
 import { toast } from "sonner";
 import { useGetCourses } from "@/data/courses";
 import AssignCourseTeacherForm from "@/components/forms/assign-course-teacher-form ";
+import MoreButton from "./more-button";
 
 const TableHeader = ({
   label,
   href,
-  tableRef,
 }: {
   label: string;
   href?: string;
-  tableRef: RefObject<HTMLTableElement>;
 }) => {
   const { data: teacherData, error: teacherError } = useGetTeacher();
   const { data: sectionData, error: sectionError } = useGetSection();
@@ -60,7 +58,7 @@ const TableHeader = ({
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <MoreButton tableRef={tableRef} />
+        <MoreButton />
         <Button
           onClick={() => (href ? router.push(href) : setOpenModal(true))}
           size="sm"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns, AssignCourseTeacherColumn } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -9,9 +9,12 @@ import TableHeader from "./table-header";
 import { useGetAssignCourseTeacher } from "@/data/assign-course-teacher";
 
 const AssignCourseTeacherClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
-  const { data: assignCourseTeacherData, error, isLoading } = useGetAssignCourseTeacher();
+  const {
+    data: assignCourseTeacherData,
+    error,
+    isLoading,
+  } = useGetAssignCourseTeacher();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -41,15 +44,13 @@ const AssignCourseTeacherClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Assign Course Teacher" />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader label="Assign Course Teacher" />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

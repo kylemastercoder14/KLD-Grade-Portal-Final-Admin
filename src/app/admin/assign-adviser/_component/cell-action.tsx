@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import AlertModal from "@/components/ui/alert-modal";
 import { AssignAdviserColumn } from "./column";
 import AssignAdviserForm from "@/components/forms/assign-form";
 import { useGetTeacher } from "@/data/teacher";
 import { useGetSection } from "@/data/sections";
 import { useDeleteAssignAdviser } from "@/data/assign-adviser";
+import PasskeyModal from "@/components/globals/passkey-modal";
 
 interface CellActionProps {
   data: AssignAdviserColumn;
@@ -27,6 +27,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { data: sectionData, error: sectionError } = useGetSection();
   const { data: teacherData, error: teacherError } = useGetTeacher();
   const [open, setOpen] = useState(false);
+  const [otp, setOtp] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [initialData, setInitialData] = useState<AssignAdviserColumn | null>(
     null
@@ -48,9 +49,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     useDeleteAssignAdviser();
 
   const onDelete = async () => {
+    if (otp !== "111111") {
+      toast.error("Invalid passkey");
+      return;
+    }
     deleteAssignAdviser(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
       },
     });
   };
@@ -72,11 +78,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <PasskeyModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.reload();
+          toast.success("Delete cancelled");
+        }}
         loading={isDeleting}
         onConfirm={onDelete}
+        title="Delete Program"
+        description="Are you sure you want to delete this adviser? This action cannot be undone."
+        setOtp={setOtp}
       />
       {formOpen && (
         <AssignAdviserForm

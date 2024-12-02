@@ -20,14 +20,23 @@ import {
 } from "@tabler/icons-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { getAllYearLevel } from "@/actions/year-level";
 import { Button } from "@/components/ui/button";
-import { Sections, Students, YearLevels } from "@prisma/client";
+import {
+  Sections,
+  Students,
+  Programs,
+  AssignCourseTeacher,
+  Teachers,
+  Courses,
+} from "@prisma/client";
+import { getAllPrograms } from "@/actions/programs";
 import { format } from "date-fns";
+import { getAllAssignCourseTeacher } from "@/actions/assign-course-teacher";
 
-interface MoreButtonProps extends YearLevels {
-  students: Students[];
+interface MoreButtonProps extends AssignCourseTeacher {
+  teachers: Teachers[];
   sections: Sections[];
+  courses: Courses[];
 }
 
 const MoreButton = () => {
@@ -36,13 +45,14 @@ const MoreButton = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllYearLevel();
+      const response = await getAllAssignCourseTeacher();
       if (response.data) {
         setData(
           response.data.map((item: any) => ({
             ...item,
-            students: item.student,
-            sections: item.section,
+            teachers: [item.teacher],
+            sections: [item.section],
+            courses: [item.course],
           }))
         );
       } else {
@@ -59,9 +69,9 @@ const MoreButton = () => {
       <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
         <thead>
           <tr>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Year Level</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Students</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Sections</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Name</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Section</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Course</th>
             <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Date Created</th>
           </tr>
         </thead>
@@ -71,13 +81,13 @@ const MoreButton = () => {
               (item) => `
             <tr>
               <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.name
+                item.teachers[0].firstName + " " + item.teachers[0].lastName
               }</td>
               <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.students.length
+                item.sections[0].name
               }</td>
               <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.sections.length
+                item.courses[0].name
               }</td>
               <td style="border: 1px solid #ddd; padding: 8px;">${format(
                 item.createdAt,
@@ -101,9 +111,10 @@ const MoreButton = () => {
         <head>
           <title>Print Data</title>
           <style>
-            body { font-family: Arial, sans-serif; margin: 20px; color: black; }
+            body { font-family: Arial, sans-serif; margin: 20px; }
             table { width: 100%; border-collapse: collapse; }
             th, td { padding: 8px; border: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
           </style>
         </head>
         <body>${tableHTML}</body>

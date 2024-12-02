@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,20 +13,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import {
-  IconFileDescription,
-  IconFileExcel,
-  IconImageInPicture,
   IconPrinter,
 } from "@tabler/icons-react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { getAllYearLevel } from "@/actions/year-level";
 import { Button } from "@/components/ui/button";
-import { Sections, Students, YearLevels } from "@prisma/client";
+import { AssignTeacher, Sections, Teachers } from "@prisma/client";
+import { getAllAssignAdviser } from "@/actions/assign-teacher";
 import { format } from "date-fns";
 
-interface MoreButtonProps extends YearLevels {
-  students: Students[];
+interface MoreButtonProps extends AssignTeacher {
+  teachers: Teachers[];
   sections: Sections[];
 }
 
@@ -36,13 +31,14 @@ const MoreButton = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllYearLevel();
+      const response = await getAllAssignAdviser();
       if (response.data) {
+        console.log("Fetched Data: ", response.data); // Debugging log
         setData(
           response.data.map((item: any) => ({
             ...item,
-            students: item.student,
-            sections: item.section,
+            teachers: [item.teacher],
+            sections: [item.section],
           }))
         );
       } else {
@@ -59,33 +55,32 @@ const MoreButton = () => {
       <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
         <thead>
           <tr>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Year Level</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Students</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Sections</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Name</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Section</th>
             <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Date Created</th>
           </tr>
         </thead>
         <tbody>
           ${data
-            .map(
-              (item) => `
-            <tr>
-              <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.name
-              }</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.students.length
-              }</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">${
-                item.sections.length
-              }</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">${format(
-                item.createdAt,
-                "MMMM dd, yyyy hh:mm a"
-              )}</td>
-            </tr>
-          `
-            )
+            .map((item) => {
+              // Ensure teachers and sections are not empty or undefined
+              const teacherName =
+                item.teachers && item.teachers.length > 0
+                  ? `${item.teachers[0].firstName} ${item.teachers[0].lastName}`
+                  : "No Teacher Assigned";
+              const sectionName =
+                item.sections && item.sections.length > 0
+                  ? item.sections[0].name
+                  : "No Section Assigned";
+              const createdAt = format(item.createdAt, "MMMM dd, yyyy hh:mm a") || "N/A";
+              return `
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">${teacherName}</td>
+                  <td style="border: 1px solid #ddd; padding: 8px;">${sectionName}</td>
+                  <td style="border: 1px solid #ddd; padding: 8px;">${createdAt}</td>
+                </tr>
+              `;
+            })
             .join("")}
         </tbody>
       </table>

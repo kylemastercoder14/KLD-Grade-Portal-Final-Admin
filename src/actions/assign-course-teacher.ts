@@ -5,7 +5,7 @@ import { AssignCourseTeacherValidator } from "@/functions/validators";
 import db from "@/lib/db";
 import { z } from "zod";
 
-export const getAllAssignCoursTeacher = async () => {
+export const getAllAssignCourseTeacher = async () => {
   try {
     const data = await db.assignCourseTeacher.findMany({
       orderBy: {
@@ -76,6 +76,16 @@ export const createAssignCourseTeacher = async (
     };
   }
 };
+
+export const createBulkAssignCourseTeacher = async (data: any[]) => {
+  try {
+    for (const courseTeacher of data) {
+      await createAssignCourseTeacher(courseTeacher);
+    }
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+}
 
 export const updateAssignCourseTeacher = async (
   values: z.infer<typeof AssignCourseTeacherValidator>,
