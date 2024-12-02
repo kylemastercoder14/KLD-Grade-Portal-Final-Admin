@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
@@ -10,7 +10,6 @@ import { useGetAnnouncement } from "@/data/announcement";
 import TableHeader from "./table-header";
 
 const AnnouncementClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: announcementData, error, isLoading } = useGetAnnouncement();
 
@@ -38,15 +37,13 @@ const AnnouncementClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} label="Add Announcement" />
-      <div ref={tableRef}>
-        <DataTable
+      <TableHeader label="Add Announcement" />
+      <DataTable
           loading={isLoading}
           searchKey="name"
           columns={columns}
           data={formattedData}
         />
-      </div>
     </div>
   );
 };
