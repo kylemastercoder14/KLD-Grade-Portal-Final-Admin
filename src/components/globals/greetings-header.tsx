@@ -76,7 +76,7 @@ const GreetingsHeader = () => {
           {dateInfo.day}, {dateInfo.date}
         </p>
         <p className="text-lg font-bold">
-          {dateInfo.greeting}, Victoria Balbio! 👋
+          {dateInfo.greeting}, Administrator 👋
         </p>
       </div>
     </div>

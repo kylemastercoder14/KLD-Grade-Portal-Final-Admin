@@ -15,7 +15,9 @@ const Database = () => {
       if (response.status === 200) {
         const { filePath } = response.data;
         console.log(filePath);
-        toast.success("Backup completed successfully!");
+        toast.success(
+          `Backup completed successfully! File saved at ${filePath}`
+        );
       }
     } catch (error) {
       console.error("Error during backup:", error);
