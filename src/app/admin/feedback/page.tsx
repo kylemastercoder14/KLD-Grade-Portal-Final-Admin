@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-query";
 import React from "react";
 import GreetingsHeader from "@/components/globals/greetings-header";
-import SupportClient from "./_component/client";
 import { getAllFeedback } from "@/actions/feedback";
+import FeedbackClient from "./_component/client";
 
 const Feedback = async () => {
   const queryClient = new QueryClient();
@@ -29,7 +29,7 @@ const Feedback = async () => {
         <Card>
           <CardContent>
             <HydrationBoundary state={dehydratedState}>
-              <SupportClient />
+              <FeedbackClient />
             </HydrationBoundary>
           </CardContent>
         </Card>

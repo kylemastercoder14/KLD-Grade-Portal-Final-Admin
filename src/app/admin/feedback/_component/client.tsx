@@ -6,7 +6,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import TableHeader from "./table-header";
-import { useGetSupport } from "@/data/support";
 import { useGetFeedback } from "@/data/feedback";
 
 const FeedbackClient = () => {
@@ -39,7 +38,7 @@ const FeedbackClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} />
+      <TableHeader />
       <div ref={tableRef}>
         <DataTable
           loading={isLoading}
