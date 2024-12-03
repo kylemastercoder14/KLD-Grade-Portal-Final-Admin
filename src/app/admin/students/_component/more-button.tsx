@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,18 +21,33 @@ import {
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Button } from "@/components/ui/button";
-import { Courses } from "@prisma/client";
-import { getAllCourses } from "@/actions/courses";
+import { Sections, Students, Programs, YearLevels } from "@prisma/client";
+import { getAllSections } from "@/actions/sections";
+import { format } from "date-fns";
+import { getAllStudents } from "@/actions/student";
+
+interface MoreButtonProps extends Students {
+  sections: Sections[];
+  programs: Programs[];
+  yearLevels: YearLevels[];
+}
 
 const MoreButton = () => {
-  const [data, setData] = useState<Courses[]>([]);
+  const [data, setData] = useState<MoreButtonProps[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllCourses();
+      const response = await getAllStudents();
       if (response.data) {
-        setData(response.data);
+        setData(
+          response.data.map((item: any) => ({
+            ...item,
+            sections: item.sections.name,
+            programs: item.programs.name,
+            yearLevels: item.yearLevels.name,
+          }))
+        );
       } else {
         console.error(response.error || "Failed to fetch data.");
       }
@@ -42,53 +57,52 @@ const MoreButton = () => {
     fetchData();
   }, []);
 
-  const generateFileName = (extension: string) => {
-    const timestamp = new Date().toISOString().replace(/[:.-]/g, "_");
-    return `courses_${timestamp}.${extension}`;
-  };
 
   const renderTableHTML = () => {
     return `
       <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
         <thead>
           <tr>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Name</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Code</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Unit</th>
-            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Pre-requisite</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Student</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Student No.</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Program</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Year Level</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Section</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Date Created</th>
           </tr>
         </thead>
         <tbody>
           ${data
-            .map((item) => {
-              // Find the prerequisite course based on the 'prerequisite' ID
-              const preRequisiteCourse = data.find(
-                (course) => course.id === item.prerequisite
-              );
-
-              return `
-                <tr>
-                  <td style="border: 1px solid #ddd; padding: 8px;">${
-                    item.name
-                  }</td>
-                  <td style="border: 1px solid #ddd; padding: 8px;">${
-                    item.code
-                  }</td>
-                  <td style="border: 1px solid #ddd; padding: 8px;">${
-                    item.unit
-                  }</td>
-                  <td style="border: 1px solid #ddd; padding: 8px;">${
-                    preRequisiteCourse ? preRequisiteCourse.name : "N/A"
-                  }</td>
-                </tr>
-              `;
-            })
+            .map(
+              (item) => `
+            <tr>
+              <td style="border: 1px solid #ddd; padding: 8px;">${
+                item.firstName + " " + item.lastName
+              }</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${
+                item.studentNumber
+              }</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${
+                item.programs
+              }</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${
+                item.yearLevels
+              }</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${
+                item.sections
+              }</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${format(
+                item.createdAt,
+                "MMMM dd, yyyy hh:mm a"
+              )}</td>
+            </tr>
+          `
+            )
             .join("")}
         </tbody>
       </table>
     `;
   };
-
 
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");

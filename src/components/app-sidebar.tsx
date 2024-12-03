@@ -84,6 +84,10 @@ const data = {
           url: "/admin/announcements",
         },
         {
+          title: "Requested Documents",
+          url: "/admin/requested-documents",
+        },
+        {
           title: "Logs",
           url: "/admin/logs",
         },

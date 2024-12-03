@@ -13,16 +13,17 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import AlertModal from "@/components/ui/alert-modal";
-import { useDeleteSemester } from "@/data/semester";
 import { StudentColumn } from "./column";
 import { useRouter } from "next/navigation";
+import PasskeyModal from "@/components/globals/passkey-modal";
+import { useArchiveStudent } from "@/data/student";
 
 interface CellActionProps {
   data: StudentColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const [otp, setOtp] = useState("");
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -31,24 +32,35 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteSemester, isPending: isDeleting } = useDeleteSemester();
+  const { mutate: archiveStudent, isPending: isDeleting } = useArchiveStudent();
 
   const onDelete = async () => {
-    deleteSemester(data.id, {
+    if (otp !== "111111") {
+      toast.error("Invalid passkey");
+      return;
+    }
+    archiveStudent(data.id, {
       onSuccess: () => {
+        window.location.reload();
         setOpen(false);
       },
     });
   };
 
-
   return (
     <>
-      <AlertModal
+      <PasskeyModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.reload();
+          toast.success("Archive cancelled");
+        }}
         loading={isDeleting}
         onConfirm={onDelete}
+        title="Archive Student"
+        description="Are you sure you want to archive this student? This action cannot be undone."
+        setOtp={setOtp}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -59,7 +71,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => router.push(`/admin/students/${data.id}`)}>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/students/${data.id}`)}
+          >
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>
@@ -70,7 +84,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Delete
+            Archive
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

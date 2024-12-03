@@ -34,7 +34,7 @@ const PassingPieChart = ({ data }: { data: InstituteData[] }) => {
                 <div className="flex md:flex-row flex-col md:items-center items-start justify-between">
                     <CardTitle className="text-[18px]">Passing Rate Per Institute</CardTitle>
                     <Select>
-                        <SelectTrigger className="w-[200px]">
+                        <SelectTrigger className="w-[200px] border dark:border-input border-zinc-300">
                             <SelectValue placeholder="Academic Year" />
                         </SelectTrigger>
                         <SelectContent>

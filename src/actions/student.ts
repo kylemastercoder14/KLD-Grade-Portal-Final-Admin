@@ -12,6 +12,36 @@ export const getAllStudents = async () => {
       orderBy: {
         createdAt: "asc",
       },
+      where: {
+        isArchive: false,
+      },
+      include: {
+        programs: true,
+        yearLevels: true,
+        sections: true,
+      },
+    });
+
+    if (!data) {
+      return { error: "No students found." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error(error);
+    return { error: "Something went wrong." };
+  }
+};
+
+export const getAllArchivedStudents = async () => {
+  try {
+    const data = await db.students.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+      where: {
+        isArchive: true,
+      },
       include: {
         programs: true,
         yearLevels: true,
@@ -121,15 +151,11 @@ export const createBulkStudents = async (data: any[]) => {
       firstName: String(student.firstName),
       middleName: student.middleName ? String(student.middleName) : "",
       lastName: String(student.lastName),
-      extensionName: student.extensionName
-        ? String(student.extensionName)
-        : "",
+      extensionName: student.extensionName ? String(student.extensionName) : "",
       birthDate: parseDateFromExcelNumber(student.birthDate),
       age: String(student.age),
       gender: String(student.gender),
-      maritalStatus: student.civilStatus
-        ? String(student.civilStatus)
-        : "", // Map to maritalStatus
+      maritalStatus: student.civilStatus ? String(student.civilStatus) : "", // Map to maritalStatus
       phoneNumber: String(student.phoneNumber),
       region: String(student.region),
       province: String(student.province),
@@ -141,17 +167,13 @@ export const createBulkStudents = async (data: any[]) => {
       password: String(student.password),
       elementarySchool: String(student.elementarySchool),
       highSchool: String(student.highSchool),
-      yearLevel: student.yearLevelId
-        ? String(student.yearLevelId)
-        : "",
+      yearLevel: student.yearLevelId ? String(student.yearLevelId) : "",
       program: student.programId ? String(student.programId) : "",
       section: student.sectionId ? String(student.sectionId) : "",
       profileImage: student.profileImage ? String(student.profileImage) : "",
     }));
 
-    await Promise.all(
-      processedData.map((student) => createStudent(student))
-    );
+    await Promise.all(processedData.map((student) => createStudent(student)));
 
     return { success: "Students created successfully" };
   } catch (error) {
@@ -262,6 +284,31 @@ export const archiveStudent = async (studentId: string) => {
   } catch (error: any) {
     return {
       error: `Failed to archive student. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const retrieveStudent = async (studentId: string) => {
+  if (!studentId) {
+    return { error: "Student ID is required." };
+  }
+
+  try {
+    const student = await db.students.update({
+      data: {
+        isArchive: false,
+      },
+      where: {
+        id: studentId,
+      },
+    });
+
+    return { success: "Student retrieved successfully", student };
+  } catch (error: any) {
+    return {
+      error: `Failed to retrieve student. Please try again. ${
         error.message || ""
       }`,
     };

@@ -86,7 +86,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         }}
         loading={isDeleting}
         onConfirm={onDelete}
-        title="Delete Year Level"
+        title="Delete Section"
         description="Are you sure you want to delete this section? This action cannot be undone."
         setOtp={setOtp}
       />
