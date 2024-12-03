@@ -10,38 +10,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { CheckCheck, MoreHorizontal, Printer, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import { TeacherColumn } from "./column";
-import { useRouter } from "next/navigation";
-import { useArchiveTeacher } from "@/data/teacher";
+import { useDeleteProgram } from "@/data/programs";
 import PasskeyModal from "@/components/globals/passkey-modal";
+import { RequestedDocumentsColumn } from "./column";
+import AlertModal from "@/components/ui/alert-modal";
+import { useConfirmDocument } from "@/data/requested-document";
 
 interface CellActionProps {
-  data: TeacherColumn;
+  data: RequestedDocumentsColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const router = useRouter();
-  const [otp, setOtp] = useState("");
   const [open, setOpen] = useState(false);
-
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [otp, setOtp] = useState("");
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: archiveTeacher, isPending: isDeleting } = useArchiveTeacher();
+  const { mutate: deleteProgram, isPending: isDeleting } = useDeleteProgram();
+  const { mutate: confirmDocument, isPending: isConfirming } =
+    useConfirmDocument();
 
   const onDelete = async () => {
     if (otp !== "111111") {
       toast.error("Invalid passkey");
       return;
     }
-    archiveTeacher(data.id, {
+    deleteProgram(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
+      },
+    });
+  };
+
+  const onConfirm = async () => {
+    confirmDocument(data.id, {
+      onSuccess: () => {
+        setConfirmOpen(false);
         window.location.reload();
       },
     });
@@ -54,13 +65,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => {
           setOpen(false);
           window.location.reload();
-          toast.success("Archive cancelled");
+          toast.success("Delete cancelled");
         }}
         loading={isDeleting}
         onConfirm={onDelete}
-        title="Archive Teacher"
-        description="Are you sure you want to archive this teacher? This action cannot be undone."
+        title="Delete Program"
+        description="Are you sure you want to delete this program? This action cannot be undone."
         setOtp={setOtp}
+      />
+      <AlertModal
+        onConfirm={onConfirm}
+        loading={isConfirming}
+        title="Are you sure you want to confirm this document?"
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -71,20 +89,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/teacher/${data.id}`)}
-          >
-            <Edit className="w-4 h-4 mr-2" />
-            Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onCopy(data.name)}>
-            <Copy className="w-4 h-4 mr-2" />
-            Copy
+          {data.status === "Pending" && (
+            <DropdownMenuItem onClick={() => setConfirmOpen(true)}>
+              <CheckCheck className="w-4 h-4 mr-2" />
+              Confirm
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem onClick={() => onCopy(data.studentNumber)}>
+            <Printer className="w-4 h-4 mr-2" />
+            Print
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Archive
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

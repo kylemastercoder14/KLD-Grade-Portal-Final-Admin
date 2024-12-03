@@ -12,19 +12,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import AlertModal from "@/components/ui/alert-modal";
 import { AssignCourseTeacherColumn } from "./column";
 import { useGetTeacher } from "@/data/teacher";
 import { useGetSection } from "@/data/sections";
 import { useGetCourses } from "@/data/courses";
 import { useDeleteAssignCourseTeacher } from "@/data/assign-course-teacher";
 import AssignCourseTeacherForm from "@/components/forms/assign-course-teacher-form ";
+import PasskeyModal from "@/components/globals/passkey-modal";
 
 interface CellActionProps {
   data: AssignCourseTeacherColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const [otp, setOtp] = useState("");
   const { data: sectionData, error: sectionError } = useGetSection();
   const { data: teacherData, error: teacherError } = useGetTeacher();
   const { data: courseData, error: courseError } = useGetCourses();
@@ -52,8 +53,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     useDeleteAssignCourseTeacher();
 
   const onDelete = async () => {
+    if (otp !== "111111") {
+      toast.error("Invalid passkey");
+      return;
+    }
     deleteAssignCourseTeacher(data.id, {
       onSuccess: () => {
+        window.location.reload();
         setOpen(false);
       },
     });
@@ -81,11 +87,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <PasskeyModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.reload();
+          toast.success("Delete cancelled");
+        }}
         loading={isDeleting}
         onConfirm={onDelete}
+        title="Delete Course Teacher"
+        description="Are you sure you want to delete this course teacher? This action cannot be undone."
+        setOtp={setOtp}
       />
       {formOpen && (
         <AssignCourseTeacherForm

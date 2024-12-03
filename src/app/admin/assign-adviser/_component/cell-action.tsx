@@ -87,7 +87,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         }}
         loading={isDeleting}
         onConfirm={onDelete}
-        title="Delete Program"
+        title="Delete Adviser"
         description="Are you sure you want to delete this adviser? This action cannot be undone."
         setOtp={setOtp}
       />

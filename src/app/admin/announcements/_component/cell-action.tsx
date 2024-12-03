@@ -14,9 +14,9 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import AlertModal from "@/components/ui/alert-modal";
 import { useDeleteAnnouncement } from "@/data/announcement";
 import AnnouncementForm from "@/components/forms/announcement-form";
+import PasskeyModal from "@/components/globals/passkey-modal";
 
 interface CellActionProps {
   data: AnnouncementColumn;
@@ -25,15 +25,23 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<AnnouncementColumn | null>(null);
+  const [otp, setOtp] = useState("");
+  const [initialData, setInitialData] = useState<AnnouncementColumn | null>(
+    null
+  );
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteAnnouncement, isPending: isDeleting } = useDeleteAnnouncement();
+  const { mutate: deleteAnnouncement, isPending: isDeleting } =
+    useDeleteAnnouncement();
 
   const onDelete = async () => {
+    if (otp !== "111111") {
+      toast.error("Invalid passkey");
+      return;
+    }
     deleteAnnouncement(data.id, {
       onSuccess: () => {
         setOpen(false);
@@ -48,11 +56,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <PasskeyModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.reload();
+          toast.success("Delete cancelled");
+        }}
         loading={isDeleting}
         onConfirm={onDelete}
+        title="Delete Announcement"
+        description="Are you sure you want to delete this announcement? This action cannot be undone."
+        setOtp={setOtp}
       />
       {formOpen && (
         <AnnouncementForm

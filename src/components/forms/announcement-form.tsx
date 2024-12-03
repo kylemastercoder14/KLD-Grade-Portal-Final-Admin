@@ -32,11 +32,12 @@ const AnnouncementForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          image: initialData.image || "",
         }
       : {
           name: "",
           description: "",
-          image: ""
+          image: "",
         },
   });
 
@@ -64,8 +65,8 @@ const AnnouncementForm = ({
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.INPUT}
-                  placeholder="Enter Name"
-                  label="Name"
+                  placeholder="Enter Title"
+                  label="Title"
                   isRequired={true}
                   name="name"
                   disabled={isSaving}

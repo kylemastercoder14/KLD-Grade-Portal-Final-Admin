@@ -6,22 +6,13 @@ import React, { RefObject, useRef, useState } from "react";
 import { IconCirclePlus, IconFileExcel } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import MoreButton from "@/app/admin/year-level/_component/more-button";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
-import { createBulkStudents } from "@/actions/student";
 import { createBulkTeachers } from "@/actions/teacher";
 import { Loader2 } from "lucide-react";
+import MoreButton from "./more-button";
 
-const TableHeader = ({
-  label,
-  href,
-  tableRef,
-}: {
-  label: string;
-  href?: string;
-  tableRef: RefObject<HTMLTableElement>;
-}) => {
+const TableHeader = ({ label, href }: { label: string; href?: string }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -100,7 +91,7 @@ const TableHeader = ({
                 Import from Excel
               </Button>
             </div>
-            <MoreButton tableRef={tableRef} />
+            <MoreButton />
             <Button
               onClick={() => href && router.push(href)}
               size="sm"

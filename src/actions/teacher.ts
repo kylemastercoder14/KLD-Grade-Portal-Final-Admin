@@ -12,6 +12,31 @@ export const getAllTeachers = async () => {
       orderBy: {
         employeeId: "asc",
       },
+      where: {
+        isArchive: false,
+      },
+    });
+
+    if (!data) {
+      return { error: "No teachers found." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error(error);
+    return { error: "Something went wrong." };
+  }
+};
+
+export const getAllArchivedTeachers = async () => {
+  try {
+    const data = await db.teachers.findMany({
+      orderBy: {
+        employeeId: "asc",
+      },
+      where: {
+        isArchive: true,
+      },
     });
 
     if (!data) {
@@ -162,9 +187,7 @@ export const createBulkTeachers = async (data: any[]) => {
         birthDate: birthDate || "",
         age,
         gender: String(teacher.gender),
-        maritalStatus: teacher.civilStatus
-          ? String(teacher.civilStatus)
-          : "", // Map to maritalStatus
+        maritalStatus: teacher.civilStatus ? String(teacher.civilStatus) : "", // Map to maritalStatus
         phoneNumber: String(teacher.phoneNumber),
         region: String(teacher.region),
         province: String(teacher.province),
@@ -182,7 +205,9 @@ export const createBulkTeachers = async (data: any[]) => {
 
     console.log("Processed bulk data:", processedData);
 
-    const results = await Promise.all(processedData.map((teacher) => createTeacher(teacher)));
+    const results = await Promise.all(
+      processedData.map((teacher) => createTeacher(teacher))
+    );
 
     console.log("Bulk insert results:", results);
     return { success: "Teachers created successfully" };
@@ -288,6 +313,31 @@ export const archiveTeacher = async (teacherId: string) => {
   } catch (error: any) {
     return {
       error: `Failed to archive teacher. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const retrieveTeacher = async (teacherId: string) => {
+  if (!teacherId) {
+    return { error: "Teacher ID is required." };
+  }
+
+  try {
+    const teacher = await db.teachers.update({
+      data: {
+        isArchive: false,
+      },
+      where: {
+        id: teacherId,
+      },
+    });
+
+    return { success: "Teacher retrieved successfully", teacher };
+  } catch (error: any) {
+    return {
+      error: `Failed to retrieve teacher. Please try again. ${
         error.message || ""
       }`,
     };

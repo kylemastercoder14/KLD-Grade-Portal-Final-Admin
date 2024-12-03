@@ -28,7 +28,7 @@ const AnnouncementClient = () => {
       id: item.id,
       name: item.name,
       description: item.description ?? "N/A",
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy hh:mm a"),
     })) || [];
 
   if (!isMounted) {
