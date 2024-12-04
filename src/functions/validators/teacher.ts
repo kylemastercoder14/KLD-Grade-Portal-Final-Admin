@@ -29,5 +29,4 @@ export const TeacherValidator = z.object({
     .min(8, { message: "Password must be at least 8 characters" }),
   profileImage: z.string().optional(),
   position: z.string().min(1, { message: "Position is required" }),
-  programId: z.string().min(1, { message: "Program is required" }),
 });

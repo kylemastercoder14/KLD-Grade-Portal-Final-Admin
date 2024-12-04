@@ -81,10 +81,7 @@ export const createTeacher = async (
     position,
     zipCode,
     profileImage,
-    programId,
   } = validatedField.data;
-
-  console.log("Inserting Teacher", values);
 
   const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -111,7 +108,6 @@ export const createTeacher = async (
         zipCode,
         profileImage,
         position,
-        programId,
       },
     });
 
@@ -199,7 +195,6 @@ export const createBulkTeachers = async (data: any[]) => {
         password: String(teacher.password),
         profileImage: teacher.profileImage ? String(teacher.profileImage) : "",
         position: "Instructor",
-        programId: teacher.programId ? String(teacher.programId) : "",
       };
     });
 
@@ -252,7 +247,6 @@ export const updateTeacher = async (
     position,
     zipCode,
     profileImage,
-    programId,
   } = validatedField.data;
 
   try {
@@ -277,7 +271,6 @@ export const updateTeacher = async (
         zipCode,
         profileImage,
         position,
-        programId,
       },
       where: {
         id: teacherId,

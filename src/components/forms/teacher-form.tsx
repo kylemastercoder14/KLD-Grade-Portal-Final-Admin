@@ -2,7 +2,7 @@
 
 import { useAddressData } from "@/functions/address-selection";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Programs, Teachers } from "@prisma/client";
+import { Teachers } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -18,10 +18,8 @@ import { useSaveTeacher } from "@/data/teacher";
 
 const TeacherForm = ({
   initialData,
-  departments,
 }: {
   initialData: Teachers | null;
-  departments: Programs[];
 }) => {
   const router = useRouter();
   const title = initialData
@@ -45,7 +43,6 @@ const TeacherForm = ({
           maritalStatus: initialData?.civilStatus ?? "",
           municipality: initialData?.city ?? "",
           barangay: initialData?.barangay ?? "",
-          programId: initialData?.programId ?? "",
         }
       : {
           employeeNumber: "",
@@ -68,7 +65,6 @@ const TeacherForm = ({
           password: "12345678",
           profileImage: "",
           position: "",
-          programId: "",
         },
   });
 
@@ -307,34 +303,19 @@ const TeacherForm = ({
               disabled={isLoading}
             />
           </div>
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-            <CustomFormField
-              label="Program"
-              name="programId"
-              placeholder="Select your program"
-              isRequired
-              fieldType={FormFieldType.SELECT}
-              control={form.control}
-              dynamicOptions={departments.map((option) => ({
-                label: option.name,
-                value: option.id,
-              }))}
-              disabled={isLoading}
-            />
-            <CustomFormField
-              label="Position"
-              name="position"
-              placeholder="Select your position"
-              isRequired
-              fieldType={FormFieldType.SELECT}
-              control={form.control}
-              dynamicOptions={positions.map((position) => ({
-                label: position,
-                value: position,
-              }))}
-              disabled={isLoading}
-            />
-          </div>
+          <CustomFormField
+            label="Position"
+            name="position"
+            placeholder="Select your position"
+            isRequired
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            dynamicOptions={positions.map((position) => ({
+              label: position,
+              value: position,
+            }))}
+            disabled={isLoading}
+          />
         </div>
         <Button
           type="submit"
