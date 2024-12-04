@@ -17,7 +17,7 @@ interface TopLeaderboardsProps {
 
 const TopLeaderboards = ({ data }: { data: TopLeaderboardsProps[] }) => {
   return (
-    <Card className="col-span-3 overflow-y-auto h-[53vh]">
+    <Card className="md:col-span-3 overflow-y-auto h-[53vh]">
       <CardHeader>
         <CardTitle className="text-[18px]">Top Students</CardTitle>
         <CardDescription>

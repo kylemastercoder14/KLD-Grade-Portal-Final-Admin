@@ -164,10 +164,10 @@ const Dashboard = async () => {
         </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-10 grid-cols-1">
-        <div className="col-span-6">
+        <div className="md:col-span-6">
           <PassingPieChart data={instituteData} />
         </div>
-        <div className="col-span-4">
+        <div className="md:col-span-4">
           <TopLeaderboards data={topStudents} />
         </div>
       </div>
