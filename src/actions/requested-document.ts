@@ -49,3 +49,25 @@ export const confirmDocument = async (documentId: string) => {
     };
   }
 };
+
+export const deleteDocument = async (documentId: string) => {
+  if (!documentId) {
+    return { error: "Document ID is required." };
+  }
+
+  try {
+    const document = await db.documentRequest.delete({
+      where: {
+        id: documentId,
+      },
+    });
+
+    return { success: "Document deleted successfully", document };
+  } catch (error: any) {
+    return {
+      error: `Failed to delete document. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};

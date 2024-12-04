@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { columns, SupportColumn } from "./column";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
-import { useGetYearLevel } from "@/data/year-level";
 import { format } from "date-fns";
 import TableHeader from "./table-header";
 import { useGetSupport } from "@/data/support";
 
 const SupportClient = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const [isMounted, setIsMounted] = React.useState(false);
   const { data: supportData, error, isLoading } = useGetSupport();
 
@@ -41,15 +39,13 @@ const SupportClient = () => {
 
   return (
     <div>
-      <TableHeader tableRef={tableRef} />
-      <div ref={tableRef}>
-        <DataTable
-          loading={isLoading}
-          searchKey="name"
-          columns={columns}
-          data={formattedData}
-        />
-      </div>
+      <TableHeader />
+      <DataTable
+        loading={isLoading}
+        searchKey="name"
+        columns={columns}
+        data={formattedData}
+      />
     </div>
   );
 };

@@ -4,8 +4,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export type SupportColumn = {
   id: string;
@@ -19,19 +19,6 @@ export type SupportColumn = {
 
 export const columns: ColumnDef<SupportColumn>[] = [
   {
-    accessorKey: "attachment",
-    header: "Attachment",
-    cell: ({ row }) => (
-      <Image
-        alt="Attachment"
-        className="rounded-sm"
-        width={60}
-        height={60}
-        src={row.original.attachment}
-      />
-    ),
-  },
-  {
     accessorKey: "name",
     header: "Name",
   },
@@ -40,11 +27,24 @@ export const columns: ColumnDef<SupportColumn>[] = [
     header: "Concern",
   },
   {
+    accessorKey: "attachment",
+    header: "Attachment",
+    cell: ({ row }) => (
+      <Link className="hover:underline text-primary" href={row.original.attachment} target="_blank">
+        {row.original.attachment}
+      </Link>
+    ),
+  },
+  {
     accessorKey: "status",
     header: "Status",
-    cell: ({row}) => (
-      <Badge variant={row.original.status === "Pending" ? "destructive" : "default"}>{row.original.status}</Badge>
-    )
+    cell: ({ row }) => (
+      <Badge
+        variant={row.original.status === "Pending" ? "destructive" : "default"}
+      >
+        {row.original.status}
+      </Badge>
+    ),
   },
   {
     accessorKey: "createdAt",

@@ -13,11 +13,10 @@ import {
 import { CheckCheck, MoreHorizontal, Printer, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useDeleteProgram } from "@/data/programs";
 import PasskeyModal from "@/components/globals/passkey-modal";
 import { RequestedDocumentsColumn } from "./column";
 import AlertModal from "@/components/ui/alert-modal";
-import { useConfirmDocument } from "@/data/requested-document";
+import { useConfirmDocument, useDeleteDocument } from "@/data/requested-document";
 
 interface CellActionProps {
   data: RequestedDocumentsColumn;
@@ -27,12 +26,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [otp, setOtp] = useState("");
-  const onCopy = (name: string) => {
-    navigator.clipboard.writeText(name);
-    toast.success("Data copied to the clipboard");
-  };
 
-  const { mutate: deleteProgram, isPending: isDeleting } = useDeleteProgram();
+  const { mutate: deleteDocument, isPending: isDeleting } = useDeleteDocument();
   const { mutate: confirmDocument, isPending: isConfirming } =
     useConfirmDocument();
 
@@ -41,7 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       toast.error("Invalid passkey");
       return;
     }
-    deleteProgram(data.id, {
+    deleteDocument(data.id, {
       onSuccess: () => {
         setOpen(false);
         window.location.reload();
@@ -69,8 +64,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         }}
         loading={isDeleting}
         onConfirm={onDelete}
-        title="Delete Program"
-        description="Are you sure you want to delete this program? This action cannot be undone."
+        title="Delete Requested Document"
+        description="Are you sure you want to delete this requested document? This action cannot be undone."
         setOtp={setOtp}
       />
       <AlertModal
@@ -95,10 +90,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               Confirm
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={() => onCopy(data.studentNumber)}>
-            <Printer className="w-4 h-4 mr-2" />
-            Print
-          </DropdownMenuItem>
+          {data.status === "Confirmed" && (
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(`/admin/requested-documents/${data.id}`, "_blank")
+              }
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              Print
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />

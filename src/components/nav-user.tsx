@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -21,19 +21,28 @@ import {
 import React from "react";
 import { Admin } from "@prisma/client";
 import { logout } from "@/actions/login";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import AlertModal from "./ui/alert-modal";
 
 export function NavUser({ admin }: { admin: Admin | null }) {
+  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const { isMobile } = useSidebar();
-  const router = useRouter();
   const handleLogout = async () => {
+    setLoading(true);
     await logout();
     toast.success("Logging out...");
-    router.push("/");
+    window.location.assign("/");
   };
   return (
     <>
+      <AlertModal
+        title="Are you sure you want to logout?"
+        isOpen={open}
+        loading={loading}
+        onClose={() => setOpen(false)}
+        onConfirm={handleLogout}
+      />
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -75,16 +84,8 @@ export function NavUser({ admin }: { admin: Admin | null }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <BadgeCheck />
-                  Account
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Bell />
-                  Notifications
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem onClick={() => setOpen(true)}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

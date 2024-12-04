@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { YearLevelColumn } from "./column";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,21 +9,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { CheckCheck, Copy, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import YearLevelForm from "@/components/forms/year-level-form";
-import { useDeleteYearLevel } from "@/data/year-level";
 import PasskeyModal from "@/components/globals/passkey-modal";
+import { useConfirmSupport, useDeleteSupport } from "@/data/support";
+import AlertModal from "@/components/ui/alert-modal";
+import { SupportColumn } from "./column";
 
 interface CellActionProps {
-  data: YearLevelColumn;
+  data: SupportColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<YearLevelColumn | null>(null);
   const [otp, setOtp] = useState("");
 
   const onCopy = (name: string) => {
@@ -33,15 +31,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteYearLevel, isPending: isDeleting } =
-    useDeleteYearLevel();
+  const { mutate: deleteSupport, isPending: isDeleting } = useDeleteSupport();
+
+  const { mutate: confirmSupport, isPending: isConfirming } =
+    useConfirmSupport();
 
   const onDelete = async () => {
     if (otp !== "111111") {
       toast.error("Invalid passkey");
       return;
     }
-    deleteYearLevel(data.id, {
+    deleteSupport(data.id, {
       onSuccess: () => {
         setOpen(false);
         window.location.reload();
@@ -49,9 +49,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
-  const onUpdate = () => {
-    setInitialData(data);
-    setFormOpen(true);
+  const onConfirm = async () => {
+    confirmSupport(data.id, {
+      onSuccess: () => {
+        setFormOpen(false);
+        window.location.reload();
+      },
+    });
   };
 
   return (
@@ -69,12 +73,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         description="Are you sure you want to delete this year level? This action cannot be undone."
         setOtp={setOtp}
       />
-      {formOpen && (
-        <YearLevelForm
-          initialData={initialData}
-          onClose={() => setFormOpen(false)}
-        />
-      )}
+      <AlertModal
+        isOpen={formOpen}
+        onClose={() => setFormOpen(false)}
+        onConfirm={onConfirm}
+        title="Are you sure you want to complete this support? This action cannot be undone."
+        loading={isConfirming}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger className="no-print" asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -84,10 +89,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onUpdate}>
-            <Edit className="w-4 h-4 mr-2" />
-            Update
-          </DropdownMenuItem>
+          {data.status === "Pending" && (
+            <DropdownMenuItem onClick={() => setFormOpen(true)}>
+              <CheckCheck className="w-4 h-4 mr-2" />
+              Mark as Complete
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy

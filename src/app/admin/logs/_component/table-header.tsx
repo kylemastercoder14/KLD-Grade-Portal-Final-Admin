@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { IconFileDescription } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 
 const TableHeader = () => {
   const [dateInfo, setDateInfo] = useState({
@@ -67,14 +65,6 @@ const TableHeader = () => {
         <p className="text-lg font-bold">
           {dateInfo.greeting}, Victoria Balbio! 👋
         </p>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" className="h-7 gap-1">
-          <IconFileDescription className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Export CSV
-          </span>
-        </Button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LifeBuoy, Send } from "lucide-react"; // Lucide icons
+import { Database, LifeBuoy, Logs, Send } from "lucide-react"; // Lucide icons
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -87,18 +87,15 @@ const data = {
           title: "Requested Documents",
           url: "/admin/requested-documents",
         },
-        {
-          title: "Logs",
-          url: "/admin/logs",
-        },
-        {
-          title: "Back-up Database",
-          url: "/admin/database",
-        },
       ],
     },
   ],
   navSecondary: [
+    {
+      title: "Logs",
+      url: "/admin/logs",
+      icon: Logs,
+    },
     {
       title: "Support",
       url: "/admin/support",
@@ -108,6 +105,11 @@ const data = {
       title: "Feedback",
       url: "/admin/feedback",
       icon: Send,
+    },
+    {
+      title: "Back-up Database",
+      url: "/admin/database",
+      icon: Database,
     },
   ],
 };

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import db from "@/lib/db";
 import { BadgeCheck, BadgeX, LibraryBig, Users } from "lucide-react";
 import PassingPieChart from "@/components/globals/passing-pie-chart";
@@ -13,6 +8,13 @@ import { Programs, Students } from "@prisma/client";
 
 interface OtherProps extends Students {
   programs: Programs;
+}
+
+interface StudentGWA {
+  studentNumber: string;
+  student: Students;
+  totalGrade: number;
+  subjectCount: number;
 }
 
 const Dashboard = async () => {
@@ -37,11 +39,6 @@ const Dashboard = async () => {
   const failingRate =
     totalGrades > 0 ? ((failingCount / totalGrades) * 100).toFixed(2) : "0";
 
-  console.log("Calculating passing and failing rates...");
-  console.log("Passing rate:", passingRate);
-  console.log("Failing rate:", failingRate);
-
-  console.log("Generating institute data...");
   const instituteData = Array.from(
     new Set(grades.map((grade) => grade.programCode))
   ).map((programCode) => {
@@ -49,7 +46,9 @@ const Dashboard = async () => {
       (student: OtherProps) => student.programs.code === programCode
     );
     const instituteGrades = grades.filter((grade) =>
-      instituteStudents.some((student) => student.studentNumber === grade.studentNumber)
+      instituteStudents.some(
+        (student) => student.studentNumber === grade.studentNumber
+      )
     );
 
     const totalGrades = instituteGrades.length;
@@ -66,14 +65,56 @@ const Dashboard = async () => {
     };
   });
 
-  console.log("Generated institute data:", instituteData);
+  const topStudentsData = await db.grades.findMany({
+    where: {
+      remarks: "PASSED",
+    },
+    orderBy: {
+      grade: "asc",
+    },
+    take: 50,
+    include: {
+      student: true,
+    },
+  });
+
+  // Define accumulator with explicit types
+  const studentGWA = topStudentsData.reduce<Record<string, StudentGWA>>(
+    (acc, grade) => {
+      if (!acc[grade.studentNumber]) {
+        acc[grade.studentNumber] = {
+          studentNumber: grade.studentNumber,
+          student: grade.student,
+          totalGrade: 0,
+          subjectCount: 0,
+        };
+      }
+
+      // Sum the grades and count the number of subjects
+      acc[grade.studentNumber].totalGrade += grade.grade;
+      acc[grade.studentNumber].subjectCount += 1;
+
+      return acc;
+    },
+    {}
+  );
+
+  const gwaData = Object.values(studentGWA).map((student) => ({
+    ...student,
+    gwa: student.totalGrade / student.subjectCount, // Calculate the GWA
+  }));
+
+  // Sort by GWA in descending order to get the top students
+  const topStudents = gwaData.sort((a, b) => b.gwa - a.gwa).slice(0, 10);
 
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Students
+            </CardTitle>
             <Users />
           </CardHeader>
           <CardContent>
@@ -109,7 +150,9 @@ const Dashboard = async () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Advisory Classes</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Advisory Classes
+            </CardTitle>
             <LibraryBig />
           </CardHeader>
           <CardContent>
@@ -125,7 +168,7 @@ const Dashboard = async () => {
           <PassingPieChart data={instituteData} />
         </div>
         <div className="col-span-4">
-          <TopLeaderboards />
+          <TopLeaderboards data={topStudents} />
         </div>
       </div>
     </>
