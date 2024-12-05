@@ -100,6 +100,7 @@ model Teachers {
   assignCourseTeacher AssignCourseTeacher[]
   consultation        Consultation[]
   advising            Advising[]
+  grades              Grades[]
 }
 
 model AssignTeacher {
@@ -147,9 +148,9 @@ model Programs {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  student  Students[]
-  section  Sections[]
-  grades   Grades[]
+  student Students[]
+  section Sections[]
+  grades  Grades[]
 }
 
 model Sections {
@@ -219,31 +220,37 @@ model Period {
 }
 
 model Grades {
-  id                 String   @id @default(cuid())
-  studentNumber      String
-  student            Students @relation(fields: [studentNumber], references: [studentNumber])
-  courseCode         String
-  course             Courses  @relation(fields: [courseCode], references: [code])
-  programCode        String
-  programs           Programs @relation(fields: [programCode], references: [code])
-  sectionName        String
-  section            Sections @relation(fields: [sectionName], references: [name])
-  period             String
-  grade              Float
-  remarks            String
-  teacherSigned      Boolean  @default(true)
-  programChairSigned Boolean  @default(false)
-  deanSigned         Boolean  @default(false)
-  registrarSigned    Boolean  @default(false)
+  id            String   @id @default(cuid())
+  studentNumber String
+  student       Students @relation(fields: [studentNumber], references: [studentNumber])
+  courseCode    String
+  course        Courses  @relation(fields: [courseCode], references: [code])
+  programCode   String
+  programs      Programs @relation(fields: [programCode], references: [code])
+  sectionName   String
+  section       Sections @relation(fields: [sectionName], references: [name])
+  period        String
+  grade         Float
+  remarks       String
+  gradeId       String
+
+  teacherId String
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model UploadedEcr {
-  id        String @id @default(cuid())
-  teacherId String
-  name      String
+  id                 String  @id @default(cuid())
+  teacherId          String
+  name               String
+  teacherSigned      Boolean @default(true)
+  programChairSigned Boolean @default(false)
+  deanSigned         Boolean @default(false)
+  registrarSigned    Boolean @default(false)
+
+  gradeId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

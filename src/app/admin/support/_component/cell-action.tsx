@@ -69,8 +69,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         }}
         loading={isDeleting}
         onConfirm={onDelete}
-        title="Delete Year Level"
-        description="Are you sure you want to delete this year level? This action cannot be undone."
+        title="Delete Support"
+        description="Are you sure you want to delete this support? This action cannot be undone."
         setOtp={setOtp}
       />
       <AlertModal
